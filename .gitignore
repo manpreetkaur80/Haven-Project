@@ -1,0 +1,51 @@
+# Environment files (keep example templates tracked)
+.env
+.env.*
+!.env.example
+!.env.sample
+
+# Dependencies
+node_modules/
+vendor/
+
+# Build output and coverage reports
+dist/
+build/
+out/
+coverage/
+htmlcov/
+
+# Python caches and virtual environments
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+ENV/
+
+# Logs and temporary files
+*.log
+logs/
+tmp/
+temp/
+*.tmp
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Operating system files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Local databases and machine-specific settings
+*.sqlite
+*.sqlite3
+*.db
+*.local
