@@ -47,3 +47,57 @@ export async function createOrder(orderData) {
 
     return data;
 }
+
+const AUTH_URL = "http://localhost:5000/api/auth";
+
+export async function signupUser(formData) {
+    const response = await fetch(`${AUTH_URL}/signup`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
+    });
+
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+        throw new Error(data.message || "Unable to create account.");
+    }
+
+    return data;
+}
+
+export async function loginUser(credentials) {
+    const response = await fetch(`${AUTH_URL}/login`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(credentials)
+    });
+
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+        throw new Error(data.message || "Unable to log in.");
+    }
+
+    return data;
+}
+
+export async function getCurrentUser(token) {
+    const response = await fetch(`${AUTH_URL}/me`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+        throw new Error(data.message || "Unable to retrieve your account.");
+    }
+
+    return data.user;
+}
