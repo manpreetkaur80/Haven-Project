@@ -6,116 +6,127 @@ const orderItemSchema = new mongoose.Schema(
         product: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Product",
-            required: true
+            required: true,
         },
         name: {
             type: String,
-            required: true
+            required: true,
         },
         image: {
             type: String,
-            default: ""
+            default: "",
         },
         price: {
             type: Number,
             required: true,
-            min: 0
+            min: 0,
         },
         quantity: {
             type: Number,
             required: true,
-            min: 1
+            min: 1,
         },
         size: {
             type: String,
-            default: ""
+            default: "",
         },
         color: {
             type: String,
-            default: ""
-        }
+            default: "",
+        },
     },
     { _id: false }
 );
 
 const orderSchema = new mongoose.Schema(
     {
+        // Customer contact details saved with the order
         customer: {
             fullName: {
                 type: String,
                 required: true,
-                trim: true
+                trim: true,
             },
             email: {
                 type: String,
                 required: true,
+                trim: true,
                 lowercase: true,
-                trim: true
             },
             phone: {
                 type: String,
                 required: true,
-                trim: true
-            }
+                trim: true,
+            },
         },
 
+        // Link the order to the registered user
+        customerId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            required: true,
+            index: true,
+        },
+
+        // Delivery address
         shippingAddress: {
             address: {
                 type: String,
-                required: true
+                required: true,
             },
             city: {
                 type: String,
-                required: true
+                required: true,
             },
             state: {
                 type: String,
-                required: true
+                required: true,
             },
             pincode: {
                 type: String,
-                required: true
-            }
+                required: true,
+            },
         },
 
+        // Products purchased
         items: {
             type: [orderItemSchema],
             required: true,
             validate: {
                 validator: (items) => items.length > 0,
-                message: "An order must contain at least one product."
-            }
+                message: "An order must contain at least one product.",
+            },
         },
 
         subtotal: {
             type: Number,
             required: true,
-            min: 0
+            min: 0,
         },
 
         shippingFee: {
             type: Number,
             default: 0,
-            min: 0
+            min: 0,
         },
 
         totalAmount: {
             type: Number,
             required: true,
-            min: 0
+            min: 0,
         },
 
         paymentMethod: {
             type: String,
             enum: ["COD"],
             default: "COD",
-            required: true
+            required: true,
         },
 
         paymentStatus: {
             type: String,
             enum: ["Pending", "Paid", "Failed"],
-            default: "Pending"
+            default: "Pending",
         },
 
         orderStatus: {
@@ -129,10 +140,10 @@ const orderSchema = new mongoose.Schema(
                 "Cancelled",
                 "Return Requested",
                 "Returned",
-                "Refunded"
+                "Refunded",
             ],
-            default: "Placed"
-        }
+            default: "Placed",
+        },
     },
     { timestamps: true }
 );

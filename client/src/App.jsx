@@ -14,7 +14,7 @@ import AddProduct from "./admin/AddProduct";
 import { CartProvider } from "./context/CartContext";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
-
+import Profile from "./pages/Profile";
 function ComingSoon({ title }) {
     return (
         <main style={{ padding: "40px" }}>
@@ -53,7 +53,14 @@ function App() {
                                 <ComingSoon title="Women's Collection" />
                             }
                         />
-
+                        <Route
+  path="/profile"
+  element={
+    <ProtectedRoute>
+      <Profile />
+    </ProtectedRoute>
+  }
+/>
                         <Route
                             path="/male"
                             element={
