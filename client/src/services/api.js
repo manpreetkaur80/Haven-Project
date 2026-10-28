@@ -204,3 +204,44 @@ export function deleteMyAddress(token, addressId) {
         method: "DELETE",
     });
 }
+
+const WISHLIST_URL = `${API_URL}/wishlist`;
+
+async function wishlistRequest(path, token, options = {}) {
+    if (!token) {
+        throw new Error("Please log in to access your wishlist.");
+    }
+
+    const response = await fetch(`${WISHLIST_URL}${path}`, {
+        ...options,
+        headers: {
+            ...options.headers,
+            Authorization: `Bearer ${token}`,
+        },
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(data.message || "Wishlist request failed.");
+    }
+
+    return data;
+}
+
+export function getMyWishlist(token) {
+    return wishlistRequest("", token);
+}
+
+export function addWishlistItem(token, productId) {
+    return wishlistRequest(`/${productId}`, token, {
+        method: "POST",
+    });
+}
+
+export function removeWishlistItem(token, productId) {
+    return wishlistRequest(`/${productId}`, token, {
+        method: "DELETE",
+    });
+}
+

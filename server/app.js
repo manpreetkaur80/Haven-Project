@@ -3,7 +3,7 @@ const express = require("express");
 const cors = require("cors");
 
 require("dotenv").config();
-
+const wishlistRoutes = require("./routes/wishlistRoutes");
 const productRoutes = require("./routes/productRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const authRoutes = require("./routes/authRoutes");
@@ -26,5 +26,5 @@ app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/profile", profileRoutes);
-
+app.use("/api/wishlist", wishlistRoutes);
 module.exports = app;
