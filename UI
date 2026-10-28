@@ -1,0 +1,108 @@
+# HAVEN — Homepage Hero Section UI Design Prompt
+
+Design a premium, modern, minimalist fashion e-commerce homepage hero section for **HAVEN**, a contemporary clothing brand for young adults aged 18–30. The brand offers women's and men's clothing, combining timeless everyday essentials with curated seasonal trends.
+
+## 1. Overall Visual Direction
+
+Create a sophisticated, editorial fashion experience inspired by the clean shopping experience of Uniqlo and the refined visual storytelling of Massimo Dutti. The design should feel premium, warm, effortless, and aspirational without looking overly luxurious, flashy, or cluttered.
+
+Use a restrained color palette of warm ivory, beige, taupe, soft brown, and charcoal. Typography should be elegant and minimal, combining a refined serif for the brand identity or selected headlines with a clean sans-serif for navigation and supporting text.
+
+## 2. Full-Screen Cinematic Video Hero
+
+The hero section must occupy the full viewport height, approximately 100vh, with a full-bleed fashion video covering the entire screen.
+
+The video should feel like a high-end fashion campaign, featuring a carefully edited sequence of:
+- Models wearing contemporary, effortlessly styled outfits.
+- Close-up shots of fabric textures, stitching, and material movement.
+- Outfit details such as layering, silhouettes, accessories, and natural movement.
+- Lifestyle scenes with natural light, understated architecture, and warm neutral surroundings.
+- A balanced mix of women's and men's fashion.
+
+Use natural lighting, soft shadows, earthy tones, realistic skin tones, and cinematic camera movement. Avoid artificial-looking models, oversaturated colors, excessive transitions, and busy backgrounds.
+
+The video should autoplay silently, loop seamlessly, and use `object-fit: cover`. Include a matching static poster image as a fallback while the video loads.
+
+## 3. Header and Navigation
+
+Place a minimal header over the video with a transparent background.
+
+**Left side navigation:**
+- Women
+- Men
+- Collections
+
+**Center:**
+- HAVEN wordmark, precisely centered in the viewport.
+- Elegant uppercase lettering with subtle letter spacing.
+
+**Right side:**
+- Search icon
+- Wishlist icon
+- Account icon
+- Shopping bag icon
+
+Keep icons thin, understated, and consistent in stroke weight. Use generous spacing and comfortable click targets.
+
+The header must remain transparent over the hero video. When the user scrolls beyond the hero, it should transition smoothly into a solid warm ivory or off-white background, becoming sticky at the top with a subtle border or shadow.
+
+The search icon should open a clean search overlay rather than immediately navigating away.
+
+## 4. Hero Copy and Positioning
+
+Position the text block in the **bottom-left corner** of the hero, with generous spacing from the screen edges.
+
+Main headline:
+
+**Everyday, in your element.**
+
+Supporting text:
+
+Discover pieces that feel like you.
+
+Primary CTA:
+
+**SHOP NOW ↗**
+
+The headline should be prominent but understated, with beautiful typography and a natural editorial feel. Supporting text should be smaller and readable against the moving video.
+
+Use a subtle dark gradient behind the text area only when needed for readability. Keep the overall image visible and immersive.
+
+The SHOP NOW CTA should be minimal, with a thin underline or understated border rather than a large, colorful button. It should lead shoppers to the latest women's and men's collections.
+
+## 5. Layout and Responsive Behavior
+
+On desktop, preserve the cinematic full-screen composition, centered brand logo, balanced navigation, and bottom-left copy.
+
+On mobile, maintain the same visual identity:
+- Use a carefully cropped vertical-friendly video composition.
+- Keep the HAVEN logo centered.
+- Replace the full navigation with a minimal menu icon if necessary.
+- Keep search and bag icons accessible.
+- Position the headline and CTA toward the lower-left with sufficient safe-area spacing.
+- Ensure text remains readable without covering the main fashion subject.
+
+## 6. Interaction and Animation
+
+Use subtle, polished interactions:
+- Smooth transition from transparent to solid sticky header.
+- Gentle headline and CTA entrance animation.
+- Understated hover states for navigation links and icons.
+- Smooth scrolling and responsive behavior.
+- No excessive parallax, distracting motion, or unnecessary loading animations.
+
+## 7. Design Constraints
+
+The result must look like a real, production-quality fashion brand website, not a generic e-commerce template.
+
+Avoid:
+- Bright accent colors.
+- Excessive cards or boxes inside the hero.
+- Large rounded buttons.
+- Gradients that overpower the video.
+- Heavy drop shadows.
+- Too many navigation links.
+- Unnecessary promotional badges or pop-ups.
+- A static banner in place of the cinematic video.
+
+**Final objective:** Create an immersive first impression that communicates HAVEN's philosophy of effortless everyday style. The hero should feel editorial, modern, timeless, and visually memorable while keeping shopping navigation intuitive and accessible.

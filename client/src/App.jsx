@@ -8,19 +8,30 @@ import OrderConfirmation from "./pages/OrderConfirmation";
 import Cart from "./pages/Cart";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import Profile from "./pages/Profile";
 
+import Header from "./components/Header";
 import AddProduct from "./admin/AddProduct";
 
 import { CartProvider } from "./context/CartContext";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
-import Profile from "./pages/Profile";
+
 function ComingSoon({ title }) {
     return (
         <main style={{ padding: "40px" }}>
             <h1>{title}</h1>
             <p>This HAVEN page is coming soon.</p>
         </main>
+    );
+}
+
+function CustomerLayout({ children }) {
+    return (
+        <>
+            <Header />
+            {children}
+        </>
     );
 }
 
@@ -33,76 +44,119 @@ function App() {
                         {/* Home */}
                         <Route
                             path="/"
-                            element={<ComingSoon title="HAVEN Home" />}
+                            element={
+                                <CustomerLayout>
+                                    <ComingSoon title="HAVEN Home" />
+                                </CustomerLayout>
+                            }
                         />
 
                         {/* Shopping */}
                         <Route
                             path="/products"
-                            element={<Products />}
+                            element={
+                                <CustomerLayout>
+                                    <Products />
+                                </CustomerLayout>
+                            }
                         />
 
                         <Route
                             path="/products/:id"
-                            element={<ProductDetails />}
+                            element={
+                                <CustomerLayout>
+                                    <ProductDetails />
+                                </CustomerLayout>
+                            }
                         />
 
                         <Route
                             path="/female"
                             element={
-                                <ComingSoon title="Women's Collection" />
+                                <CustomerLayout>
+                                    <ComingSoon title="Women's Collection" />
+                                </CustomerLayout>
                             }
                         />
-                        <Route
-  path="/profile"
-  element={
-    <ProtectedRoute>
-      <Profile />
-    </ProtectedRoute>
-  }
-/>
+
                         <Route
                             path="/male"
                             element={
-                                <ComingSoon title="Men's Collection" />
+                                <CustomerLayout>
+                                    <ComingSoon title="Men's Collection" />
+                                </CustomerLayout>
                             }
                         />
 
                         <Route
                             path="/new-arrivals"
                             element={
-                                <ComingSoon title="New Arrivals" />
+                                <CustomerLayout>
+                                    <ComingSoon title="New Arrivals" />
+                                </CustomerLayout>
+                            }
+                        />
+
+                        {/* Customer Profile */}
+                        <Route
+                            path="/profile"
+                            element={
+                                <CustomerLayout>
+                                    <ProtectedRoute>
+                                        <Profile />
+                                    </ProtectedRoute>
+                                </CustomerLayout>
                             }
                         />
 
                         {/* Cart and checkout */}
                         <Route
                             path="/cart"
-                            element={<Cart />}
+                            element={
+                                <CustomerLayout>
+                                    <Cart />
+                                </CustomerLayout>
+                            }
                         />
 
                         <Route
                             path="/checkout"
-                            element={<Checkout />}
+                            element={
+                                <CustomerLayout>
+                                    <Checkout />
+                                </CustomerLayout>
+                            }
                         />
 
                         <Route
                             path="/order-confirmation/:id"
-                            element={<OrderConfirmation />}
+                            element={
+                                <CustomerLayout>
+                                    <OrderConfirmation />
+                                </CustomerLayout>
+                            }
                         />
 
                         {/* Customer authentication */}
                         <Route
                             path="/login"
-                            element={<Login />}
+                            element={
+                                <CustomerLayout>
+                                    <Login />
+                                </CustomerLayout>
+                            }
                         />
 
                         <Route
                             path="/signup"
-                            element={<Signup />}
+                            element={
+                                <CustomerLayout>
+                                    <Signup />
+                                </CustomerLayout>
+                            }
                         />
 
-                        {/* Admin login */}
+                        {/* Admin login: separate from customer layout */}
                         <Route
                             path="/admin/login"
                             element={<Login adminOnly />}
@@ -130,7 +184,11 @@ function App() {
                         {/* Fallback */}
                         <Route
                             path="*"
-                            element={<ComingSoon title="Page Not Found" />}
+                            element={
+                                <CustomerLayout>
+                                    <ComingSoon title="Page Not Found" />
+                                </CustomerLayout>
+                            }
                         />
                     </Routes>
                 </CartProvider>
