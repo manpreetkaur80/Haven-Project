@@ -9,6 +9,7 @@ import Cart from "./pages/Cart";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Profile from "./pages/Profile";
+import Wishlist from "./pages/Wishlist";
 
 import Header from "./components/Header";
 import AddProduct from "./admin/AddProduct";
@@ -74,6 +75,15 @@ function App() {
                             />
 
                             <Route
+                                path="/wishlist"
+                                element={
+                                    <CustomerLayout>
+                                        <Wishlist />
+                                    </CustomerLayout>
+                                }
+                            />
+
+                            <Route
                                 path="/female"
                                 element={
                                     <CustomerLayout>
@@ -100,7 +110,7 @@ function App() {
                                 }
                             />
 
-                            {/* Customer Profile */}
+                            {/* Customer profile */}
                             <Route
                                 path="/profile"
                                 element={

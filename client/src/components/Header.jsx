@@ -5,13 +5,13 @@ import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
 import LogoutButton from "./LogoutButton";
 import "./Header.css";
-
+import { useWishlist } from "../context/WishlistContext";
 function Header() {
     const { user, token } = useAuth();
     const { cartItems } = useCart();
     const [searchOpen, setSearchOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
-
+    const { wishlistCount } = useWishlist();
     const cartCount = Array.isArray(cartItems)
         ? cartItems.reduce(
               (total, item) => total + Number(item.quantity || 1),
@@ -45,6 +45,9 @@ function Header() {
                 </Link>
 
                 <div className="haven-nav-right">
+                    <Link to="/wishlist">
+    Wishlist ({wishlistCount})
+</Link>
                     <button
                         type="button"
                         className="haven-nav-button"

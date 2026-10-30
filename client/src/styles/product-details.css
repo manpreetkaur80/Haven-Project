@@ -281,3 +281,20 @@
         padding-top: 0;
     }
 }
+.detail-wishlist-button {
+    display: block;
+    width: 100%;
+    margin-top: 12px;
+    padding: 14px 18px;
+    border: 1px solid #5a4a3b;
+    background: transparent;
+    color: #40352c;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.detail-wishlist-button:hover,
+.detail-wishlist-button.is-saved {
+    background: #f1ece5;
+}
