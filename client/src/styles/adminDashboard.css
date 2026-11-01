@@ -1,0 +1,279 @@
+
+.admin-dashboard-page {
+    max-width: 1450px;
+    min-height: 80vh;
+    margin: 0 auto;
+    padding: 55px 5%;
+    color: #40352f;
+}
+
+.admin-dashboard-header,
+.dashboard-section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.admin-dashboard-header {
+    margin-bottom: 40px;
+}
+
+.admin-dashboard-header h1 {
+    font-size: 36px;
+    margin: 8px 0;
+    font-weight: 500;
+}
+
+.admin-dashboard-header p {
+    color: #82766e;
+}
+
+.dashboard-eyebrow {
+    color: #9a806d !important;
+    font-size: 11px;
+    letter-spacing: 2px;
+    font-weight: 700;
+}
+
+.dashboard-refresh-btn {
+    padding: 12px 19px;
+    border: 1px solid #cfc4ba;
+    background: #fff;
+    color: #40352f;
+    cursor: pointer;
+}
+
+.dashboard-refresh-btn:hover {
+    background: #f5f0eb;
+}
+
+.dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.dashboard-stat-card {
+    min-height: 145px;
+    padding: 23px;
+    border: 1px solid #e7e0da;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.dashboard-stat-label {
+    color: #82766e;
+    font-size: 13px;
+}
+
+.dashboard-stat-card strong {
+    font-size: 31px;
+    font-weight: 500;
+    color: #40352f;
+    overflow-wrap: anywhere;
+}
+
+.dashboard-stat-card small {
+    color: #958980;
+    font-size: 11px;
+}
+
+.dashboard-stat-highlight {
+    background: #f5f0eb;
+    border-color: #e8ded4;
+}
+
+.dashboard-quick-section,
+.dashboard-recent-section {
+    margin-top: 55px;
+}
+
+.dashboard-section-heading {
+    margin-bottom: 22px;
+}
+
+.dashboard-section-heading h2 {
+    font-size: 24px;
+    font-weight: 500;
+    margin: 5px 0;
+}
+
+.dashboard-quick-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.dashboard-quick-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 185px;
+    padding: 25px;
+    border: 1px solid #e7e0da;
+    color: #40352f;
+    text-decoration: none;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.dashboard-quick-card:hover {
+    background: #f8f5f1;
+    border-color: #bca895;
+}
+
+.dashboard-quick-number {
+    color: #a38d79;
+    font-size: 12px;
+    letter-spacing: 1px;
+}
+
+.dashboard-quick-card h3 {
+    font-size: 19px;
+    font-weight: 500;
+    margin: 20px 0 8px;
+}
+
+.dashboard-quick-card p {
+    color: #82766e;
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.dashboard-quick-link {
+    margin-top: auto;
+    padding-top: 20px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.dashboard-view-all {
+    color: #786252;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+.dashboard-view-all:hover {
+    text-decoration: underline;
+}
+
+.dashboard-orders-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid #e7e0da;
+}
+
+.dashboard-orders-table {
+    width: 100%;
+    min-width: 750px;
+    border-collapse: collapse;
+    font-size: 13px;
+    background: #fff;
+}
+
+.dashboard-orders-table th,
+.dashboard-orders-table td {
+    padding: 16px;
+    text-align: left;
+    border-bottom: 1px solid #eee8e2;
+}
+
+.dashboard-orders-table th {
+    background: #f8f5f1;
+    color: #65564b;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+}
+
+.dashboard-order-status {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 20px;
+    background: #f1ece6;
+    color: #665747;
+    font-size: 11px;
+    white-space: nowrap;
+}
+
+.status-delivered {
+    background: #edf6ee;
+    color: #28633d;
+}
+
+.status-cancelled,
+.status-refunded,
+.status-returned {
+    background: #fff0f0;
+    color: #a33c30;
+}
+
+.status-shipped {
+    background: #edf2fa;
+    color: #425d87;
+}
+
+.status-placed,
+.status-confirmed,
+.status-processing {
+    background: #f5f0e5;
+    color: #80683c;
+}
+
+.dashboard-no-orders {
+    padding: 40px 20px;
+    text-align: center;
+    border: 1px solid #e7e0da;
+    color: #82766e;
+}
+
+.dashboard-no-orders h3 {
+    color: #40352f;
+    font-weight: 500;
+}
+
+.dashboard-error {
+    padding: 15px;
+    background: #fff0f0;
+    color: #a33c30;
+}
+
+@media (max-width: 900px) {
+    .dashboard-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dashboard-quick-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .admin-dashboard-page {
+        padding: 30px 4%;
+    }
+
+    .admin-dashboard-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .admin-dashboard-header h1 {
+        font-size: 29px;
+    }
+
+    .dashboard-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-stat-card {
+        min-height: 125px;
+    }
+
+    .dashboard-section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}

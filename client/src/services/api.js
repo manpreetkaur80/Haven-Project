@@ -294,3 +294,27 @@ export async function deleteAdminProduct(token, productId) {
     });
 }
 
+// ==============================
+// ADMIN ORDER MANAGEMENT
+// ==============================
+
+export async function getAdminOrders(token) {
+    if (!token) {
+        throw new Error("Please log in as an administrator.");
+    }
+
+    const response = await fetch(`${API_URL}/admin/orders`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+        throw new Error(data.message || "Failed to fetch admin orders.");
+    }
+
+    return data.orders || [];
+}
+
