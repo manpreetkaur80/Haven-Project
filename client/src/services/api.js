@@ -245,3 +245,52 @@ export function removeWishlistItem(token, productId) {
     });
 }
 
+// ==============================
+// ADMIN PRODUCT MANAGEMENT
+// ==============================
+
+const ADMIN_PRODUCTS_URL = `${API_URL}/products/admin`;
+
+async function adminProductRequest(path, token, options = {}) {
+    if (!token) {
+        throw new Error("Please log in as an administrator.");
+    }
+
+    const response = await fetch(`${ADMIN_PRODUCTS_URL}${path}`, {
+        ...options,
+        headers: {
+            ...options.headers,
+            Authorization: `Bearer ${token}`,
+        },
+    });
+
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+        throw new Error(data.message || "Admin product request failed.");
+    }
+
+    return data;
+}
+
+// Get all products, including unpublished products
+export async function getAdminProducts(token) {
+    const data = await adminProductRequest("/all", token);
+    return data.products || data;
+}
+
+// Update product details and optionally add images
+export async function updateAdminProduct(token, productId, formData) {
+    return adminProductRequest(`/${productId}`, token, {
+        method: "PATCH",
+        body: formData,
+    });
+}
+
+// Delete a product
+export async function deleteAdminProduct(token, productId) {
+    return adminProductRequest(`/${productId}`, token, {
+        method: "DELETE",
+    });
+}
+

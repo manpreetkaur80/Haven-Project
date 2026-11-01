@@ -13,7 +13,7 @@ import Wishlist from "./pages/Wishlist";
 import AdminOrders from "./admin/AdminOrders";
 import Header from "./components/Header";
 import AddProduct from "./admin/AddProduct";
-
+import AdminProducts from "./admin/AdminProducts";
 import { CartProvider } from "./context/CartContext";
 import { AuthProvider } from "./context/AuthContext";
 import { WishlistProvider } from "./context/WishlistContext";
@@ -64,6 +64,14 @@ function App() {
                                     </CustomerLayout>
                                 }
                             />
+                            <Route
+    path="/admin/products"
+    element={
+        <ProtectedRoute adminOnly>
+            <AdminProducts />
+        </ProtectedRoute>
+    }
+/>
                             <Route
                                 path="/admin/orders"
                                 element={
