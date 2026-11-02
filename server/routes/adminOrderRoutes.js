@@ -10,7 +10,11 @@ const {
     authenticate,
     requireAdmin,
 } = require("../middleware/auth");
-
+const {
+    reviewReturnRequest,
+    markReturned,
+    markRefunded,
+} = require("../controllers/returnController");
 const router = express.Router();
 router.use(authenticate, requireAdmin);
 
@@ -21,7 +25,9 @@ router.use(authenticate, requireAdmin);
 
 // Get all orders
 router.get("/", getAllOrders);
-
+router.patch("/:orderId/return/review", reviewReturnRequest);
+router.patch("/:orderId/returned", markReturned);
+router.patch("/:orderId/refund", markRefunded);
 // Update a specific order's status
 router.patch("/:orderId/status", updateOrderStatus);
 

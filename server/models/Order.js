@@ -1,6 +1,7 @@
 
 const mongoose = require("mongoose");
 
+// ORDER ITEM SCHEMA
 const orderItemSchema = new mongoose.Schema(
     {
         product: {
@@ -38,9 +39,46 @@ const orderItemSchema = new mongoose.Schema(
     { _id: false }
 );
 
+// RETURN REQUEST SCHEMA
+const returnRequestSchema = new mongoose.Schema(
+    {
+        reason: {
+            type: String,
+            trim: true,
+            maxlength: 500,
+            default: "",
+        },
+        status: {
+            type: String,
+            enum: [
+                "Not Requested",
+                "Pending",
+                "Approved",
+                "Rejected",
+            ],
+            default: "Not Requested",
+        },
+        adminNote: {
+            type: String,
+            trim: true,
+            default: "",
+        },
+        requestedAt: {
+            type: Date,
+            default: null,
+        },
+        reviewedAt: {
+            type: Date,
+            default: null,
+        },
+    },
+    { _id: false }
+);
+
+// MAIN ORDER SCHEMA
 const orderSchema = new mongoose.Schema(
     {
-        // Customer contact details saved with the order
+        // Customer contact details
         customer: {
             fullName: {
                 type: String,
@@ -60,7 +98,7 @@ const orderSchema = new mongoose.Schema(
             },
         },
 
-        // Link the order to the registered user
+        // Registered customer reference
         customerId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
@@ -88,7 +126,7 @@ const orderSchema = new mongoose.Schema(
             },
         },
 
-        // Products purchased
+        // Purchased products
         items: {
             type: [orderItemSchema],
             required: true,
@@ -98,37 +136,37 @@ const orderSchema = new mongoose.Schema(
             },
         },
 
+        // Order pricing
         subtotal: {
             type: Number,
             required: true,
             min: 0,
         },
-
         shippingFee: {
             type: Number,
             default: 0,
             min: 0,
         },
-
         totalAmount: {
             type: Number,
             required: true,
             min: 0,
         },
 
+        // Payment information
         paymentMethod: {
             type: String,
             enum: ["COD"],
             default: "COD",
             required: true,
         },
-
         paymentStatus: {
             type: String,
             enum: ["Pending", "Paid", "Failed"],
             default: "Pending",
         },
 
+        // Order lifecycle
         orderStatus: {
             type: String,
             enum: [
@@ -144,8 +182,22 @@ const orderSchema = new mongoose.Schema(
             ],
             default: "Placed",
         },
+
+        // Prevent duplicate stock restoration
+        stockRestored: {
+            type: Boolean,
+            default: false,
+        },
+
+        // Return request information
+        returnRequest: {
+            type: returnRequestSchema,
+            default: () => ({}),
+        },
     },
-    { timestamps: true }
+    {
+        timestamps: true,
+    }
 );
 
 module.exports = mongoose.model("Order", orderSchema);

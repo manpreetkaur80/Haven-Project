@@ -248,4 +248,116 @@ const createOrder = async (req, res) => {
   }
 };
 
-module.exports = { createOrder };
+
+const cancelMyOrder = async (req, res) => {
+    const { orderId } = req.params;
+
+    if (!mongoose.isValidObjectId(orderId)) {
+        return res.status(400).json({
+            message: "Invalid order ID.",
+        });
+    }
+
+    const session = await mongoose.startSession();
+
+    try {
+        let cancelledOrder;
+
+        await session.withTransaction(async () => {
+            // Find the order belonging to the logged-in customer.
+            const order = await Order.findOne({
+                _id: orderId,
+                customerId: req.user.userId,
+            }).session(session);
+
+            if (!order) {
+                throw Object.assign(
+                    new Error("Order not found."),
+                    { statusCode: 404 }
+                );
+            }
+
+            if (order.orderStatus === "Cancelled") {
+                throw Object.assign(
+                    new Error("This order has already been cancelled."),
+                    { statusCode: 409 }
+                );
+            }
+
+            // Customers cannot cancel orders after shipment.
+            const cancellableStatuses = [
+                "Placed",
+                "Confirmed",
+                "Processing",
+            ];
+
+            if (!cancellableStatuses.includes(order.orderStatus)) {
+                throw Object.assign(
+                    new Error(
+                        "This order can no longer be cancelled. Please use the return process if applicable."
+                    ),
+                    { statusCode: 409 }
+                );
+            }
+
+            // Restore stock only if it has not already been restored.
+            if (!order.stockRestored) {
+                for (const item of order.items) {
+                    const result = await Product.updateOne(
+                        { _id: item.product },
+                        {
+                            $inc: {
+                                stock: item.quantity,
+                            },
+                        },
+                        { session }
+                    );
+
+                    if (result.matchedCount !== 1) {
+                        throw Object.assign(
+                            new Error(
+                                `Product "${item.name}" could not be found. Stock restoration failed.`
+                            ),
+                            { statusCode: 409 }
+                        );
+                    }
+                }
+
+                order.stockRestored = true;
+            }
+
+            order.orderStatus = "Cancelled";
+
+            await order.save({ session });
+
+            cancelledOrder = order;
+        });
+
+        return res.status(200).json({
+            message: "Your order has been cancelled successfully.",
+            order: cancelledOrder,
+        });
+
+    } catch (error) {
+        if (error.statusCode) {
+            return res.status(error.statusCode).json({
+                message: error.message,
+            });
+        }
+
+        console.error("Customer order cancellation error:", error);
+
+        return res.status(500).json({
+            message: "Unable to cancel your order. Please try again.",
+        });
+
+    } finally {
+        await session.endSession();
+    }
+};
+
+
+module.exports = {
+    createOrder,
+    cancelMyOrder,
+};
