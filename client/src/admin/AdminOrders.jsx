@@ -3,7 +3,11 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 
 const API_URL = "http://localhost:5000/api";
-
+import {
+    reviewReturnRequest,
+    markOrderReturned,
+    markOrderRefunded,
+} from "../services/api";
 const ORDER_STATUSES = [
     "Placed",
     "Confirmed",
@@ -11,14 +15,11 @@ const ORDER_STATUSES = [
     "Shipped",
     "Delivered",
     "Cancelled",
-    "Return Requested",
-    "Returned",
-    "Refunded",
 ];
 
 function AdminOrders() {
     const { token, user } = useAuth();
-
+    const [adminReturnNote, setAdminReturnNote] = useState("");
     const [orders, setOrders] = useState([]);
     const [selectedOrder, setSelectedOrder] = useState(null);
     const [selectedStatus, setSelectedStatus] = useState("");
@@ -26,7 +27,73 @@ function AdminOrders() {
     const [updating, setUpdating] = useState(false);
     const [error, setError] = useState("");
     const [message, setMessage] = useState("");
+    const handleReturnReview = async (decision) => {
+    if (!selectedOrder) return;
 
+    setUpdating(true);
+    setError("");
+    setMessage("");
+
+    try {
+        await reviewReturnRequest(
+            token,
+            selectedOrder._id,
+            decision,
+            adminReturnNote
+        );
+
+        await fetchOrders();
+        setAdminReturnNote("");
+        setMessage(`Return request ${decision.toLowerCase()} successfully.`);
+    } catch (err) {
+        setError(err.message || "Unable to review return request.");
+    } finally {
+        setUpdating(false);
+    }
+};
+
+const handleMarkReturned = async () => {
+    if (!selectedOrder) return;
+
+    setUpdating(true);
+    setError("");
+    setMessage("");
+
+    try {
+        await markOrderReturned(token, selectedOrder._id);
+        await fetchOrders();
+        setMessage("Order marked as returned.");
+    } catch (err) {
+        setError(err.message || "Unable to mark order as returned.");
+    } finally {
+        setUpdating(false);
+    }
+};
+
+const handleMarkRefunded = async () => {
+    if (!selectedOrder) return;
+
+    if (selectedOrder.paymentStatus !== "Paid") {
+        setError("Record the payment as Paid before marking this order as Refunded.");
+        return;
+    }
+
+    if (!window.confirm("Have you actually processed the refund?")) return;
+
+    setUpdating(true);
+    setError("");
+    setMessage("");
+
+    try {
+        await markOrderRefunded(token, selectedOrder._id);
+        await fetchOrders();
+        setMessage("Refund recorded successfully.");
+    } catch (err) {
+        setError(err.message || "Unable to record refund.");
+    } finally {
+        setUpdating(false);
+    }
+};
     // Fetch all orders
     const fetchOrders = async () => {
         setLoading(true);
@@ -295,6 +362,97 @@ function AdminOrders() {
                     >
                         {updating ? "Updating..." : "Update Status"}
                     </button>
+                    <hr />
+
+<h3>Return Management</h3>
+
+{selectedOrder.returnRequest?.status === "Pending" &&
+ selectedOrder.orderStatus === "Return Requested" && (
+    <div>
+        <p><strong>Customer's reason:</strong></p>
+        <p>{selectedOrder.returnRequest.reason}</p>
+
+        <label>
+            Admin note (optional)
+            <textarea
+                value={adminReturnNote}
+                onChange={(event) => setAdminReturnNote(event.target.value)}
+                maxLength={500}
+                rows={3}
+            />
+        </label>
+
+        <div>
+            <button
+                type="button"
+                disabled={updating}
+                onClick={() => handleReturnReview("Approved")}
+            >
+                Approve Return
+            </button>
+
+            <button
+                type="button"
+                disabled={updating}
+                onClick={() => handleReturnReview("Rejected")}
+            >
+                Reject Return
+            </button>
+        </div>
+    </div>
+)}
+
+{selectedOrder.returnRequest?.status === "Approved" &&
+ selectedOrder.orderStatus === "Return Requested" && (
+    <div>
+        <p>Return approved.</p>
+        {selectedOrder.returnRequest.adminNote && (
+            <p>Admin note: {selectedOrder.returnRequest.adminNote}</p>
+        )}
+
+        <button
+            type="button"
+            disabled={updating}
+            onClick={handleMarkReturned}
+        >
+            Mark as Returned
+        </button>
+    </div>
+)}
+
+{selectedOrder.returnRequest?.status === "Rejected" && (
+    <p>
+        Return rejected.
+        {selectedOrder.returnRequest.adminNote &&
+            ` Admin note: ${selectedOrder.returnRequest.adminNote}`}
+    </p>
+)}
+
+{selectedOrder.orderStatus === "Returned" && (
+    <div>
+        <p>Item has been marked as returned.</p>
+        <p>Payment status: {selectedOrder.paymentStatus}</p>
+
+        {selectedOrder.paymentStatus === "Paid" ? (
+            <button
+                type="button"
+                disabled={updating}
+                onClick={handleMarkRefunded}
+            >
+                Mark Refund Completed
+            </button>
+        ) : (
+            <p>
+                Payment must be recorded as Paid before the refund can be
+                recorded.
+            </p>
+        )}
+    </div>
+)}
+
+{selectedOrder.orderStatus === "Refunded" && (
+    <p>Refund has been recorded as completed.</p>
+)}
                 </section>
             )}
         </main>

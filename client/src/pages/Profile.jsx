@@ -10,7 +10,15 @@ import {
   deleteMyAddress,
 } from "../services/api";
 import "../styles/profile.css";
-
+import {
+    getMyProfile,
+    updateMyProfile,
+    getMyOrders,
+    addMyAddress,
+    updateMyAddress,
+    deleteMyAddress,
+    requestOrderReturn,
+} from "../services/api";
 const emptyAddress = {
   label: "Home",
   recipientName: "",
@@ -26,13 +34,42 @@ const emptyAddress = {
 
 function Profile() {
   const { token, user, logout } = useAuth();
-
+  const [returnOrderId, setReturnOrderId] = useState(null);
+const [returnReason, setReturnReason] = useState("");
+const [returnSubmitting, setReturnSubmitting] = useState(false);
   const [profile, setProfile] = useState({
     name: "",
     email: "",
     phone: "",
     addresses: [],
   });
+  const handleReturnRequest = async (event, orderId) => {
+    event.preventDefault();
+
+    if (!returnReason.trim()) {
+        setError("Please enter a reason for returning this order.");
+        return;
+    }
+
+    setReturnSubmitting(true);
+    setError("");
+    setNotice("");
+
+    try {
+        await requestOrderReturn(token, orderId, returnReason.trim());
+
+        setReturnOrderId(null);
+        setReturnReason("");
+
+        await loadProfile();
+
+        setNotice("Your return request has been submitted.");
+    } catch (err) {
+        handleError(err);
+    } finally {
+        setReturnSubmitting(false);
+    }
+};
   const [orders, setOrders] = useState([]);
   const [profileForm, setProfileForm] = useState({
     name: "",
@@ -483,6 +520,65 @@ function Profile() {
                         <span>{order.paymentMethod || "COD"}</span>
                         <strong>{formatCurrency(order.totalAmount)}</strong>
                       </div>
+                      {order.orderStatus === "Delivered" && (
+    <div>
+        {returnOrderId === order._id ? (
+            <form onSubmit={(event) => handleReturnRequest(event, order._id)}>
+                <label>
+                    Reason for return
+                    <textarea
+                        value={returnReason}
+                        onChange={(event) => setReturnReason(event.target.value)}
+                        maxLength={500}
+                        rows={3}
+                        required
+                    />
+                </label>
+
+                <button type="submit" disabled={returnSubmitting}>
+                    {returnSubmitting ? "Submitting..." : "Submit return request"}
+                </button>
+
+                <button
+                    type="button"
+                    onClick={() => {
+                        setReturnOrderId(null);
+                        setReturnReason("");
+                    }}
+                    disabled={returnSubmitting}
+                >
+                    Cancel
+                </button>
+            </form>
+        ) : (
+            <button
+                type="button"
+                onClick={() => {
+                    setReturnOrderId(order._id);
+                    setReturnReason("");
+                    setError("");
+                    setNotice("");
+                }}
+            >
+                Request Return
+            </button>
+        )}
+    </div>
+)}
+
+{order.orderStatus === "Return Requested" && (
+    <p>
+        Return status: {order.returnRequest?.status || "Pending"}
+    </p>
+)}
+
+{order.orderStatus === "Returned" && (
+    <p>Returned — refund processing is handled by our team.</p>
+)}
+
+{order.orderStatus === "Refunded" && (
+    <p>Refund completed.</p>
+)}
                     </article>
                   ))}
                 </div>

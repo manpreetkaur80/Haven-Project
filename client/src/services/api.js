@@ -318,3 +318,13 @@ export async function getAdminOrders(token) {
     return data.orders || [];
 }
 
+// ==============================
+// CUSTOMER RETURN REQUESTS
+// ==============================
+
+export function requestOrderReturn(token, orderId, reason) {
+    return profileRequest(`/../orders/${orderId}/return`, token, {
+        method: "POST",
+        body: JSON.stringify({ reason }),
+    });
+}
