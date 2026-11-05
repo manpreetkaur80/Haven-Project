@@ -1,14 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import {
-  getMyProfile,
-  updateMyProfile,
-  getMyOrders,
-  addMyAddress,
-  updateMyAddress,
-  deleteMyAddress,
-} from "../services/api";
+
 import "../styles/profile.css";
 import {
     getMyProfile,

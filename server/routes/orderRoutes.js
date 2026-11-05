@@ -15,10 +15,6 @@ router.post("/", authenticate, createOrder);
 
 // Customers can cancel their own eligible orders.
 router.patch("/:orderId/cancel", authenticate, cancelMyOrder);
-const {
-    createOrder,
-    cancelMyOrder,
-} = require("../controllers/orderController");
 
 const {
     requestReturn,
