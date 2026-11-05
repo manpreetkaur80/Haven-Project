@@ -393,11 +393,12 @@ export function loginUser(credentials) {
         body: JSON.stringify(credentials),
     });
 }
-
-export function getCurrentUser(token) {
-    return apiRequest(`${AUTH_URL}/me`, {
+export async function getCurrentUser(token) {
+    const data = await apiRequest(`${AUTH_URL}/me`, {
         headers: authHeaders(token),
     });
+
+    return data.user || data;
 }
 
 // ========================================
@@ -495,32 +496,33 @@ export function removeWishlistItem(token, productId) {
 // ========================================
 
 export function getAdminProducts(token) {
-    return apiRequest(`${API_URL}/admin/products`, {
+    return apiRequest(`${API_URL}/products/admin/all`, {
         headers: authHeaders(token),
+    });
+}
+
+export function createAdminProduct(token, productData) {
+    return apiRequest(`${API_URL}/products`, {
+        method: "POST",
+        headers: authHeaders(token),
+        body: productData,
     });
 }
 
 export function updateAdminProduct(token, productId, productData) {
-    const isFormData = productData instanceof FormData;
-
-    return apiRequest(`${API_URL}/admin/products/${productId}`, {
+    return apiRequest(`${API_URL}/products/admin/${productId}`, {
         method: "PATCH",
-        headers: isFormData
-            ? authHeaders(token)
-            : jsonHeaders(token),
-        body: isFormData
-            ? productData
-            : JSON.stringify(productData),
+        headers: authHeaders(token),
+        body: productData,
     });
 }
 
 export function deleteAdminProduct(token, productId) {
-    return apiRequest(`${API_URL}/admin/products/${productId}`, {
+    return apiRequest(`${API_URL}/products/admin/${productId}`, {
         method: "DELETE",
         headers: authHeaders(token),
     });
 }
-
 // ========================================
 // ADMIN ORDERS
 // ========================================
