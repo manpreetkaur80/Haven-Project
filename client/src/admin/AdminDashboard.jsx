@@ -28,10 +28,10 @@ function AdminDashboard() {
                     getAdminOrders(token)
                 ]);
 
-                if (active) {
-                    setProducts(productData);
-                    setOrders(orderData);
-                }
+               if (active) {
+  setProducts(Array.isArray(productData) ? productData : productData.products || []);
+  setOrders(Array.isArray(orderData) ? orderData : orderData.orders || []);
+}
             } catch (err) {
                 if (active) {
                     setError(err.message || "Unable to load dashboard data.");
