@@ -12,6 +12,7 @@ import Profile from "./pages/Profile";
 import Wishlist from "./pages/Wishlist";
 import AdminOrders from "./admin/AdminOrders";
 import Header from "./components/Header";
+import Home from "./pages/Home";
 import AddProduct from "./admin/AddProduct";
 import AdminProducts from "./admin/AdminProducts";
 import AdminDashboard from "./admin/AdminDashboard";
@@ -51,7 +52,7 @@ function App() {
                                 path="/"
                                 element={
                                     <CustomerLayout>
-                                        <ComingSoon title="HAVEN Home" />
+                                        <Home />
                                     </CustomerLayout>
                                 }
                             />

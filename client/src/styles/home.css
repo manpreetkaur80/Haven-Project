@@ -1,0 +1,72 @@
+/* Release the global #root cap (index.css) so the hero can be full-bleed. */
+html.is-home #root {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    border-inline: 0;
+    text-align: left;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+}
+
+.haven-home {
+    background: #f7f3ec;
+    color: #2a2723;
+}
+
+.haven-home-next {
+    padding: clamp(72px, 12vh, 140px) clamp(24px, 4.5vw, 72px);
+    min-height: 100vh;
+    min-height: 100svh;
+    box-sizing: border-box;
+}
+
+.haven-home-eyebrow {
+    margin: 0 0 18px;
+    color: #8a7d6c;
+    font-family: "Inter", system-ui, sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+}
+
+.haven-home-next h2 {
+    margin: 0;
+    color: #2a2723;
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: clamp(36px, 4.6vw, 64px);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 1.05;
+}
+
+.haven-home-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px 40px;
+    margin-top: 40px;
+}
+
+.haven-home-links a {
+    padding-bottom: 6px;
+    border-bottom: 1px solid #2a2723;
+    color: #2a2723;
+    font-family: "Inter", system-ui, sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: opacity 0.3s ease;
+}
+
+.haven-home-links a:hover {
+    opacity: 0.55;
+}
