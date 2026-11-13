@@ -601,15 +601,3 @@ export function createProductReview(token, productId, review) {
         body: JSON.stringify(review),
     });
 }
-
-// ========================================
-// NEWSLETTER
-// ========================================
-
-export function subscribeToNewsletter(email) {
-    return apiRequest(`${API_URL}/newsletter`, {
-        method: "POST",
-        headers: jsonHeaders(),
-        body: JSON.stringify({ email }),
-    });
-}

@@ -10,7 +10,6 @@ const authRoutes = require("./routes/authRoutes");
 const profileRoutes = require("./routes/profileRoutes");
 const adminOrderRoutes = require("./routes/adminOrderRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
-const newsletterRoutes = require("./routes/newsletterRoutes");
 
 
 // Initialize Express
@@ -33,5 +32,4 @@ app.use("/api/profile", profileRoutes);
 app.use("/api/wishlist", wishlistRoutes);
 app.use("/api/admin/orders", adminOrderRoutes);
 app.use("/api/reviews", reviewRoutes);
-app.use("/api/newsletter", newsletterRoutes);
 module.exports = app;

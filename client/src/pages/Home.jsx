@@ -8,7 +8,6 @@ import BrandStory from "../components/BrandStory";
 import ServiceStrip from "../components/ServiceStrip";
 import ShopTheLook from "../components/ShopTheLook";
 import ReviewsSection from "../components/ReviewsSection";
-import Newsletter from "../components/Newsletter";
 import Footer from "../components/Footer";
 import { getProducts } from "../services/api";
 import "../styles/home.css";
@@ -59,7 +58,6 @@ function Home() {
             <BrandStory />
             <ReviewsSection />
             <ServiceStrip />
-            <Newsletter />
             <Footer />
         </main>
     );
