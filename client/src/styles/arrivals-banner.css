@@ -1,0 +1,135 @@
+/* ==========================================================
+   HAVEN — Home: New arrivals banner (full-screen media)
+   ========================================================== */
+
+.haven-banner {
+    --b-ivory: #f7f3ec;
+    --b-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 100vh;
+    height: 100svh;
+    min-height: 520px;
+    overflow: hidden;
+    background: #6f6252;
+    color: var(--b-ivory);
+    isolation: isolate;
+    text-align: center;
+}
+
+.haven-banner-poster,
+.haven-banner-video,
+.haven-banner-shade {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.haven-banner-poster {
+    z-index: 0;
+    background-position: center;
+    background-size: cover;
+}
+
+.haven-banner-video {
+    z-index: 1;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 1s var(--b-ease);
+    pointer-events: none;
+}
+
+.haven-banner-video.is-ready {
+    opacity: 1;
+}
+
+.haven-banner-shade {
+    z-index: 2;
+    background: rgba(26, 22, 18, 0.32);
+    pointer-events: none;
+}
+
+.haven-banner-copy {
+    position: relative;
+    z-index: 3;
+    width: min(760px, calc(100% - 48px));
+}
+
+.haven-banner-eyebrow {
+    margin: 0 0 clamp(16px, 2.5vh, 24px);
+    font-family: "Inter", system-ui, sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    opacity: 0.9;
+}
+
+.haven-banner .haven-banner-copy h2 {
+    margin: 0;
+    color: var(--b-ivory);
+    font-family: "Cormorant Garamond", "Cormorant", Georgia, serif;
+    font-size: clamp(48px, 7.4vw, 112px);
+    font-weight: 400;
+    letter-spacing: -0.015em;
+    line-height: 0.98;
+    text-wrap: balance;
+}
+
+.haven-banner-sub {
+    margin: clamp(18px, 2.6vh, 28px) auto 0;
+    max-width: 40ch;
+    font-family: "Inter", system-ui, sans-serif;
+    font-size: clamp(14px, 1.15vw, 16px);
+    font-weight: 300;
+    line-height: 1.6;
+    letter-spacing: 0.02em;
+    text-shadow: 0 1px 14px rgba(26, 22, 18, 0.35);
+}
+
+.haven-banner-cta {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-top: clamp(28px, 4.5vh, 44px);
+    padding: 0 0 8px;
+    border-bottom: 1px solid rgba(247, 243, 236, 0.85);
+    color: var(--b-ivory);
+    font-family: "Inter", system-ui, sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.24em;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: gap 0.4s var(--b-ease);
+}
+
+.haven-banner-arrow {
+    display: inline-block;
+    font-size: 14px;
+    letter-spacing: 0;
+    transition: transform 0.4s var(--b-ease);
+}
+
+.haven-banner-cta:hover,
+.haven-banner-cta:focus-visible {
+    gap: 16px;
+}
+
+.haven-banner-cta:hover .haven-banner-arrow,
+.haven-banner-cta:focus-visible .haven-banner-arrow {
+    transform: translate(2px, -2px);
+}
+
+.haven-banner-cta:focus-visible {
+    outline: 1px solid var(--b-ivory);
+    outline-offset: 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .haven-banner-video {
+        transition: none;
+    }
+}

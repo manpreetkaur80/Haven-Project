@@ -104,7 +104,7 @@ function App() {
                                 path="/female"
                                 element={
                                     <CustomerLayout>
-                                        <ComingSoon title="Women's Collection" />
+                                        <Products category="Women" />
                                     </CustomerLayout>
                                 }
                             />
@@ -113,7 +113,7 @@ function App() {
                                 path="/male"
                                 element={
                                     <CustomerLayout>
-                                        <ComingSoon title="Men's Collection" />
+                                        <Products category="Men" />
                                     </CustomerLayout>
                                 }
                             />
@@ -122,7 +122,7 @@ function App() {
                                 path="/new-arrivals"
                                 element={
                                     <CustomerLayout>
-                                        <ComingSoon title="New Arrivals" />
+                                        <Products title="New Arrivals" />
                                     </CustomerLayout>
                                 }
                             />

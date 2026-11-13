@@ -1,0 +1,120 @@
+/* HAVEN — Home: newsletter */
+
+.haven-news {
+    padding: clamp(56px, 9vh, 104px) clamp(20px, 4.5vw, 72px);
+    background: #ebe4d8;
+    color: #2a2723;
+}
+
+.haven-news-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(32px, 6vw, 96px);
+    align-items: end;
+}
+
+.haven-news-eyebrow {
+    margin: 0 0 14px;
+    color: #8a7d6c;
+    font-family: "Inter", system-ui, sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+}
+
+.haven-news .haven-news-inner h2 {
+    margin: 0;
+    color: #2a2723;
+    font-family: "Cormorant Garamond", "Cormorant", Georgia, serif;
+    font-size: clamp(32px, 4vw, 54px);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 1.02;
+}
+
+.haven-news-text {
+    margin: 16px 0 0;
+    color: #4a443c;
+    font-family: "Inter", system-ui, sans-serif;
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 1.6;
+}
+
+.haven-news-sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+}
+
+.haven-news-field {
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+    border-bottom: 1px solid #2a2723;
+}
+
+.haven-news-field input {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: #2a2723;
+    font-family: "Inter", system-ui, sans-serif;
+    font-size: 16px;
+}
+
+.haven-news-field input::placeholder {
+    color: #8a7d6c;
+}
+
+.haven-news-field button {
+    padding: 10px 0;
+    border: 0;
+    background: transparent;
+    color: #2a2723;
+    font-family: "Inter", system-ui, sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+}
+
+.haven-news-field button:hover {
+    opacity: 0.55;
+}
+
+.haven-news-field button:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.haven-news-field input:focus-visible,
+.haven-news-field button:focus-visible {
+    outline: 1px solid #2a2723;
+    outline-offset: 4px;
+}
+
+.haven-news-message {
+    min-height: 20px;
+    margin: 12px 0 0;
+    color: #4a443c;
+    font-family: "Inter", system-ui, sans-serif;
+    font-size: 13px;
+}
+
+.haven-news-message.is-error {
+    color: #7a3b2e;
+}
+
+@media (max-width: 820px) {
+    .haven-news-inner {
+        grid-template-columns: 1fr;
+        align-items: start;
+    }
+}

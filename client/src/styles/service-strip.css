@@ -1,0 +1,55 @@
+/* HAVEN — Home: service strip */
+
+.haven-services {
+    padding: clamp(40px, 6vh, 64px) clamp(20px, 4.5vw, 72px);
+    background: #f7f3ec;
+    color: #2a2723;
+    border-bottom: 1px solid #e5ded1;
+}
+
+.haven-services ul {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 32px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.haven-services li {
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+}
+
+.haven-services svg {
+    flex: 0 0 auto;
+    color: #8a7d6c;
+}
+
+.haven-services h2 {
+    margin: 0;
+    color: #2a2723;
+    font-family: "Inter", system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-align: left;
+    text-transform: uppercase;
+}
+
+.haven-services p {
+    margin: 8px 0 0;
+    color: #6f6456;
+    font-family: "Inter", system-ui, sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.5;
+}
+
+@media (max-width: 720px) {
+    .haven-services ul {
+        grid-template-columns: 1fr;
+        gap: 28px;
+    }
+}

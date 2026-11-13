@@ -582,3 +582,34 @@ export function markOrderRefunded(token, orderId) {
         method: "PATCH",
     });
 }
+// ========================================
+// REVIEWS
+// ========================================
+
+export function getLatestReviews() {
+    return apiRequest(`${API_URL}/reviews/latest`);
+}
+
+export function getProductReviews(productId) {
+    return apiRequest(`${API_URL}/reviews/product/${productId}`);
+}
+
+export function createProductReview(token, productId, review) {
+    return apiRequest(`${API_URL}/reviews/product/${productId}`, {
+        method: "POST",
+        headers: jsonHeaders(token),
+        body: JSON.stringify(review),
+    });
+}
+
+// ========================================
+// NEWSLETTER
+// ========================================
+
+export function subscribeToNewsletter(email) {
+    return apiRequest(`${API_URL}/newsletter`, {
+        method: "POST",
+        headers: jsonHeaders(),
+        body: JSON.stringify({ email }),
+    });
+}

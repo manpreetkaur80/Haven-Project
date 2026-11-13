@@ -1,0 +1,161 @@
+/* HAVEN — product page reviews */
+
+.haven-pr {
+    margin-top: 72px;
+    padding-top: 40px;
+    border-top: 1px solid #e5ded1;
+    color: #282722;
+    font-family: "Inter", system-ui, sans-serif;
+}
+
+.haven-pr-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+}
+
+.haven-pr .haven-pr-head h2 {
+    margin: 0;
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 36px;
+    font-weight: 400;
+    color: #282722;
+}
+
+.haven-pr-summary {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    font-size: 13px;
+    color: #6f6456;
+}
+
+.haven-pr-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 56px;
+}
+
+.haven-pr-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.haven-pr-list li {
+    padding: 0 0 24px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid #ece6da;
+}
+
+.haven-pr-empty {
+    color: #8a7d6c;
+    border-bottom: 0 !important;
+}
+
+.haven-pr-comment {
+    margin: 12px 0 10px;
+    font-size: 15px;
+    line-height: 1.7;
+    font-weight: 300;
+}
+
+.haven-pr-by {
+    margin: 0;
+    font-size: 12px;
+    color: #8a7d6c;
+    letter-spacing: 0.04em;
+}
+
+.haven-pr-note,
+.haven-pr-error {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #4a443c;
+}
+
+.haven-pr-note a {
+    color: inherit;
+    border-bottom: 1px solid currentColor;
+    text-decoration: none;
+}
+
+.haven-pr-error {
+    margin-top: 12px;
+    color: #7a3b2e;
+}
+
+.haven-pr-form h3 {
+    margin: 0 0 16px;
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 26px;
+    font-weight: 400;
+}
+
+.haven-pr-rate {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 18px;
+}
+
+.haven-pr-rate button {
+    padding: 4px;
+    border: 0;
+    background: transparent;
+    color: #8a7d6c;
+    cursor: pointer;
+}
+
+.haven-pr-rate button.is-on {
+    color: #282722;
+}
+
+.haven-pr-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #8a7d6c;
+}
+
+.haven-pr-form textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    border: 1px solid #d9d0c0;
+    background: #fff;
+    font: inherit;
+    font-size: 14px;
+    resize: vertical;
+}
+
+.haven-pr-form > button[type="submit"] {
+    margin-top: 16px;
+    padding: 12px 28px;
+    border: 1px solid #282722;
+    background: #282722;
+    color: #f7f3ec;
+    font: inherit;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.haven-pr-form > button[type="submit"]:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+@media (max-width: 820px) {
+    .haven-pr-body {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+}

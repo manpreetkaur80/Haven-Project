@@ -81,6 +81,84 @@ const products = [
         stock: 20,
         isFeatured: false,
         isPublished: true
+    },
+    {
+        name: "Linen Blend Shirt",
+        description: "A breathable linen-blend shirt with an easy, relaxed drape.",
+        price: 1899,
+        category: "Women",
+        subcategory: "Shirts",
+        images: [],
+        sizes: ["S", "M", "L", "XL"],
+        colors: ["Sand", "White"],
+        stock: 18,
+        isFeatured: true,
+        isPublished: true
+    },
+    {
+        name: "Ribbed Knit Top",
+        description: "A soft ribbed knit top that layers or stands on its own.",
+        price: 1299,
+        category: "Women",
+        subcategory: "Knitwear",
+        images: [],
+        sizes: ["S", "M", "L"],
+        colors: ["Taupe", "Ivory"],
+        stock: 22,
+        isFeatured: true,
+        isPublished: true
+    },
+    {
+        name: "Wide Leg Trousers",
+        description: "Fluid wide-leg trousers with a clean, tailored waist.",
+        price: 2199,
+        category: "Women",
+        subcategory: "Trousers",
+        images: [],
+        sizes: ["S", "M", "L", "XL"],
+        colors: ["Charcoal", "Stone"],
+        stock: 14,
+        isFeatured: false,
+        isPublished: true
+    },
+    {
+        name: "Heavyweight Cotton Tee",
+        description: "A substantial everyday tee in dense, soft-washed cotton.",
+        price: 999,
+        category: "Men",
+        subcategory: "T-Shirts",
+        images: [],
+        sizes: ["S", "M", "L", "XL"],
+        colors: ["Off-white", "Brown"],
+        stock: 30,
+        isFeatured: true,
+        isPublished: true
+    },
+    {
+        name: "Textured Knit Sweater",
+        description: "A midweight textured sweater for easy, layered days.",
+        price: 2499,
+        category: "Men",
+        subcategory: "Knitwear",
+        images: [],
+        sizes: ["M", "L", "XL"],
+        colors: ["Oatmeal", "Charcoal"],
+        stock: 12,
+        isFeatured: true,
+        isPublished: true
+    },
+    {
+        name: "Relaxed Chino Trousers",
+        description: "Relaxed-fit chinos in a smooth cotton twill.",
+        price: 1999,
+        category: "Men",
+        subcategory: "Trousers",
+        images: [],
+        sizes: ["S", "M", "L", "XL"],
+        colors: ["Khaki", "Navy"],
+        stock: 16,
+        isFeatured: false,
+        isPublished: true
     }
 ];
 

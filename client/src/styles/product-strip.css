@@ -1,0 +1,236 @@
+/* ==========================================================
+   HAVEN — Home: pinned horizontal product strip
+   ========================================================== */
+
+.haven-strip {
+    --s-ivory: #f7f3ec;
+    --s-sand: #ebe4d8;
+    --s-charcoal: #2a2723;
+    --s-taupe: #8a7d6c;
+    --s-gutter: clamp(20px, 4.5vw, 72px);
+    --s-header: 84px;
+
+    position: relative;
+    background: var(--s-ivory);
+    color: var(--s-charcoal);
+}
+
+.haven-strip-sticky {
+    padding: calc(var(--s-header) + clamp(24px, 5vh, 56px)) 0 clamp(40px, 7vh, 72px);
+    box-sizing: border-box;
+}
+
+/* Pinned: fill the viewport and stay put while the track slides. */
+.haven-strip-sticky.is-pinned {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    padding-bottom: clamp(32px, 6vh, 56px);
+}
+
+.haven-strip-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 0 var(--s-gutter);
+    margin-bottom: clamp(20px, 4vh, 44px);
+}
+
+.haven-strip-eyebrow {
+    margin: 0 0 12px;
+    color: var(--s-taupe);
+    font-family: "Inter", system-ui, sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+}
+
+.haven-strip .haven-strip-head h2 {
+    margin: 0;
+    color: var(--s-charcoal);
+    font-family: "Cormorant Garamond", "Cormorant", Georgia, serif;
+    font-size: clamp(32px, 4vw, 54px);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 1.02;
+}
+
+.haven-strip-all {
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--s-charcoal);
+    color: var(--s-charcoal);
+    font-family: "Inter", system-ui, sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-decoration: none;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition: opacity 0.3s ease;
+}
+
+.haven-strip-all:hover {
+    opacity: 0.55;
+}
+
+/* ---------- Track ---------- */
+
+.haven-strip-track {
+    display: flex;
+    align-items: flex-start;
+    gap: clamp(14px, 1.8vw, 28px);
+    width: max-content;
+    padding: 0 var(--s-gutter);
+    will-change: transform;
+}
+
+.haven-strip-item {
+    flex: 0 0 auto;
+    /* Width follows both viewport width and height so a card always fits. */
+    width: clamp(220px, min(23vw, 36svh), 360px);
+}
+
+.haven-strip-progress {
+    height: 1px;
+    margin: clamp(20px, 4vh, 40px) var(--s-gutter) 0;
+    background: rgba(42, 39, 35, 0.14);
+}
+
+.haven-strip-progress span {
+    display: block;
+    height: 100%;
+    background: var(--s-charcoal);
+    transform: scaleX(0);
+    transform-origin: left;
+}
+
+/* Closing tile: same footprint as an image, quietly typographic. */
+.haven-strip-end-link {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 18px;
+    aspect-ratio: 4 / 5;
+    padding: clamp(18px, 2vw, 28px);
+    box-sizing: border-box;
+    background: var(--s-sand);
+    color: var(--s-charcoal);
+    text-decoration: none;
+    transition: background-color 0.5s ease;
+}
+
+.haven-strip-end-link:hover {
+    background: #e2d9ca;
+}
+
+.haven-strip-end-title {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: clamp(28px, 2.6vw, 38px);
+    line-height: 1.05;
+}
+
+.haven-strip-end-cta {
+    align-self: flex-start;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--s-charcoal);
+    font-family: "Inter", system-ui, sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+}
+
+.haven-strip-end-link:focus-visible {
+    outline: 1px solid var(--s-charcoal);
+    outline-offset: 4px;
+}
+
+/* ---------- Reduced motion / unpinned: a plain swipeable row ---------- */
+
+.haven-strip.is-native .haven-strip-sticky,
+.haven-strip-sticky:not(.is-pinned) {
+    position: static;
+    height: auto;
+}
+
+.haven-strip.is-native .haven-strip-track {
+    width: auto;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scrollbar-width: thin;
+    padding-bottom: 16px;
+}
+
+.haven-strip.is-native .haven-strip-item {
+    scroll-snap-align: start;
+}
+
+/* ---------- States ---------- */
+
+.haven-strip-note {
+    margin: 0;
+    padding: 24px var(--s-gutter);
+    color: var(--s-taupe);
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 24px;
+}
+
+.haven-strip-note button {
+    padding: 0;
+    border: 0;
+    border-bottom: 1px solid currentColor;
+    background: transparent;
+    color: var(--s-charcoal);
+    font: inherit;
+    cursor: pointer;
+}
+
+.haven-skel-media,
+.haven-skel-line {
+    background: var(--s-sand);
+    animation: haven-pulse 1.8s ease-in-out infinite;
+}
+
+.haven-skel-media {
+    aspect-ratio: 4 / 5;
+}
+
+.haven-skel-line {
+    height: 10px;
+    margin-top: 16px;
+}
+
+.haven-skel-line.is-short {
+    width: 40%;
+    margin-top: 10px;
+}
+
+@keyframes haven-pulse {
+    50% {
+        opacity: 0.55;
+    }
+}
+
+@media (max-width: 900px) {
+    .haven-strip {
+        --s-header: 64px;
+    }
+}
+
+@media (max-width: 720px) {
+    .haven-strip-item {
+        width: min(62vw, 40svh);
+        min-width: 200px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .haven-skel-media,
+    .haven-skel-line {
+        animation: none;
+    }
+}

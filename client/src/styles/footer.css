@@ -1,0 +1,97 @@
+/* ==========================================================
+   HAVEN — Footer
+   ========================================================== */
+
+.haven-footer {
+    background: #2a2723;
+    color: #f7f3ec;
+    padding: clamp(56px, 9vh, 104px) clamp(20px, 4.5vw, 72px) 28px;
+    text-align: left;
+}
+
+.haven-footer-main {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) repeat(2, minmax(0, 1fr));
+    gap: 48px;
+    padding-bottom: clamp(48px, 8vh, 88px);
+}
+
+.haven-footer-logo {
+    color: inherit;
+    font-family: "Cormorant Garamond", "Cormorant", Georgia, serif;
+    font-size: clamp(36px, 4vw, 56px);
+    font-weight: 500;
+    letter-spacing: 0.34em;
+    text-decoration: none;
+}
+
+.haven-footer-brand p {
+    margin: 18px 0 0;
+    color: rgba(247, 243, 236, 0.62);
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 22px;
+}
+
+.haven-footer .haven-footer-col h2 {
+    margin: 0 0 20px;
+    color: rgba(247, 243, 236, 0.5);
+    font-family: "Inter", system-ui, sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+}
+
+.haven-footer-col ul {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.haven-footer-col a {
+    color: #f7f3ec;
+    font-family: "Inter", system-ui, sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+}
+
+.haven-footer-col a:hover {
+    opacity: 0.6;
+}
+
+.haven-footer a:focus-visible {
+    outline: 1px solid #f7f3ec;
+    outline-offset: 4px;
+}
+
+.haven-footer-base {
+    padding-top: 24px;
+    border-top: 1px solid rgba(247, 243, 236, 0.14);
+}
+
+.haven-footer-base p {
+    margin: 0;
+    color: rgba(247, 243, 236, 0.5);
+    font-family: "Inter", system-ui, sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+}
+
+@media (max-width: 720px) {
+    .haven-footer-main {
+        grid-template-columns: 1fr 1fr;
+        gap: 40px 24px;
+    }
+    .haven-footer-brand {
+        grid-column: 1 / -1;
+    }
+    .haven-footer-logo {
+        letter-spacing: 0.3em;
+    }
+}

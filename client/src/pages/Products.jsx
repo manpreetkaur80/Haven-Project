@@ -138,12 +138,17 @@
 // export default Products;
 
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { getProducts } from "../services/api";
 import { useWishlist } from "../context/WishlistContext";
 import "../styles/products.css";
 
-function Products() {
+/* Optional `category` ("Women" | "Men") and `title` props let the same page
+   serve /female, /male and /new-arrivals. ?search= and ?subcategory= filter too. */
+function Products({ category, title }) {
+    const [searchParams] = useSearchParams();
+    const searchTerm = (searchParams.get("search") || "").trim().toLowerCase();
+    const subcategory = (searchParams.get("subcategory") || "").trim().toLowerCase();
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
@@ -185,9 +190,31 @@ function Products() {
     if (loading) return <p>Loading HAVEN products...</p>;
     if (error) return <p>{error}</p>;
 
+    const visibleProducts = products.filter((product) => {
+        if (category && product.category !== category) return false;
+        if (subcategory && (product.subcategory || "").toLowerCase() !== subcategory) {
+            return false;
+        }
+        if (searchTerm) {
+            const haystack = [
+                product.name,
+                product.description,
+                product.category,
+                product.subcategory,
+            ]
+                .join(" ")
+                .toLowerCase();
+            return searchTerm.split(/\s+/).every((word) => haystack.includes(word));
+        }
+        return true;
+    });
+
     return (
         <main className="products-page">
-            <h1>HAVEN Collection</h1>
+            <h1>
+                {title ||
+                    (category ? `${category}'s Collection` : "HAVEN Collection")}
+            </h1>
 
             {wishlistMessage && (
                 <p className="product-wishlist-message" role="status">
@@ -196,7 +223,7 @@ function Products() {
             )}
 
             <div className="product-grid">
-                {products.map((product) => {
+                {visibleProducts.map((product) => {
                     const saved = isWishlisted(product._id);
 
                     return (
@@ -259,8 +286,12 @@ function Products() {
                 })}
             </div>
 
-            {products.length === 0 && (
-                <p>No products available yet.</p>
+            {visibleProducts.length === 0 && (
+                <p>
+                    {products.length === 0
+                        ? "No products available yet."
+                        : "No products match your selection."}
+                </p>
             )}
         </main>
     );

@@ -295,6 +295,7 @@ import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
 
 import "../styles/product-details.css";
+import ProductReviews from "../components/ProductReviews";
 
 function ProductDetails() {
     const { id } = useParams();
@@ -682,6 +683,8 @@ function ProductDetails() {
                     </div>
                 </section>
             </div>
+
+            <ProductReviews productId={product._id} />
         </main>
     );
 }

@@ -1,0 +1,120 @@
+/* HAVEN — Home: shop by category */
+
+.haven-crow {
+    --r-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+    padding: 0 clamp(20px, 4.5vw, 72px) clamp(72px, 12vh, 140px);
+    background: #f7f3ec;
+    color: #2a2723;
+}
+
+.haven-crow-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: clamp(24px, 4.5vh, 48px);
+}
+
+.haven-crow-eyebrow {
+    margin: 0 0 12px;
+    color: #8a7d6c;
+    font-family: "Inter", system-ui, sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+}
+
+.haven-crow .haven-crow-head h2 {
+    margin: 0;
+    color: #2a2723;
+    font-family: "Cormorant Garamond", "Cormorant", Georgia, serif;
+    font-size: clamp(32px, 4vw, 54px);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 1.02;
+}
+
+.haven-crow-all {
+    padding-bottom: 6px;
+    border-bottom: 1px solid #2a2723;
+    color: #2a2723;
+    font-family: "Inter", system-ui, sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-decoration: none;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition: opacity 0.3s ease;
+}
+
+.haven-crow-all:hover {
+    opacity: 0.55;
+}
+
+.haven-crow-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(14px, 1.8vw, 28px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.haven-crow-tile {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+}
+
+.haven-crow-media {
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    background: linear-gradient(160deg, #e3d9c8 0%, #cdbfa8 100%);
+}
+
+.haven-crow-media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1.2s var(--r-ease);
+}
+
+.haven-crow-tile:hover .haven-crow-media img,
+.haven-crow-tile:focus-visible .haven-crow-media img {
+    transform: scale(1.04);
+}
+
+.haven-crow-tile:focus-visible {
+    outline: 1px solid #2a2723;
+    outline-offset: 6px;
+}
+
+.haven-crow-label {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 14px;
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: clamp(22px, 2vw, 28px);
+}
+
+.haven-crow-count {
+    color: #8a7d6c;
+    font-family: "Inter", system-ui, sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+}
+
+@media (max-width: 900px) {
+    .haven-crow-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .haven-crow-media img {
+        transition: none;
+    }
+}
