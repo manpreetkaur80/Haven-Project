@@ -1,10 +1,10 @@
 /* HAVEN — product page reviews */
 
 .haven-pr {
-    margin-top: 72px;
-    padding-top: 40px;
-    border-top: 1px solid #e5ded1;
-    color: #282722;
+    margin-top: clamp(64px, 10vh, 112px);
+    padding-top: 48px;
+    border-top: 1px solid #ddd4c4;
+    color: #2a2723;
     font-family: "Inter", system-ui, sans-serif;
 }
 
@@ -129,7 +129,7 @@
     box-sizing: border-box;
     padding: 12px;
     border: 1px solid #d9d0c0;
-    background: #fff;
+    background: #fffdf9;
     font: inherit;
     font-size: 14px;
     resize: vertical;

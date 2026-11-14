@@ -299,6 +299,13 @@ import ProductReviews from "../components/ProductReviews";
 
 function ProductDetails() {
     const { id } = useParams();
+
+    /* Lets the stylesheet release the global #root width cap on this page. */
+    useEffect(() => {
+        document.documentElement.classList.add("is-wide");
+        return () => document.documentElement.classList.remove("is-wide");
+    }, []);
+
     const { addToCart } = useCart();
 
     const {

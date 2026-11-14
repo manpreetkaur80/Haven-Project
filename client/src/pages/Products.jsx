@@ -138,7 +138,7 @@
 // export default Products;
 
 import { useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { getProducts } from "../services/api";
 import { useWishlist } from "../context/WishlistContext";
 import "../styles/products.css";
@@ -147,6 +147,14 @@ import "../styles/products.css";
    serve /female, /male and /new-arrivals. ?search= and ?subcategory= filter too. */
 function Products({ category, title }) {
     const [searchParams] = useSearchParams();
+    const { pathname } = useLocation();
+
+    /* Lets the stylesheet release the global #root width cap on this page. */
+    useEffect(() => {
+        document.documentElement.classList.add("is-wide");
+        return () => document.documentElement.classList.remove("is-wide");
+    }, []);
+
     const searchTerm = (searchParams.get("search") || "").trim().toLowerCase();
     const subcategory = (searchParams.get("subcategory") || "").trim().toLowerCase();
     const [products, setProducts] = useState([]);
@@ -187,8 +195,20 @@ function Products({ category, title }) {
         }
     }
 
-    if (loading) return <p>Loading HAVEN products...</p>;
-    if (error) return <p>{error}</p>;
+    if (loading) {
+        return (
+            <main className="products-page">
+                <p className="products-empty">Loading HAVEN products...</p>
+            </main>
+        );
+    }
+    if (error) {
+        return (
+            <main className="products-page">
+                <p className="products-empty">{error}</p>
+            </main>
+        );
+    }
 
     const visibleProducts = products.filter((product) => {
         if (category && product.category !== category) return false;
@@ -209,12 +229,31 @@ function Products({ category, title }) {
         return true;
     });
 
+    const filterLabel =
+        searchParams.get("search") || searchParams.get("subcategory") || "";
+    const pageTitle =
+        title || (category ? `${category}'s Collection` : "HAVEN Collection");
+
     return (
         <main className="products-page">
-            <h1>
-                {title ||
-                    (category ? `${category}'s Collection` : "HAVEN Collection")}
-            </h1>
+            <header className="products-head">
+                <div>
+                    <p className="products-eyebrow">
+                        {category ? "Shop" : "The collection"}
+                    </p>
+                    <h1>{pageTitle}</h1>
+                </div>
+                <p className="products-count">
+                    {visibleProducts.length}{" "}
+                    {visibleProducts.length === 1 ? "piece" : "pieces"}
+                </p>
+            </header>
+
+            {filterLabel && (
+                <p className="products-filter">
+                    Showing “{filterLabel}” <Link to={pathname}>Clear</Link>
+                </p>
+            )}
 
             {wishlistMessage && (
                 <p className="product-wishlist-message" role="status">
@@ -232,17 +271,28 @@ function Products({ category, title }) {
                                 <Link
                                     to={`/products/${product._id}`}
                                     className="product-card-link"
+                                    aria-label={product.name}
                                 >
                                     <div className="product-image-placeholder">
                                         {product.images?.[0]?.url ? (
-                                            <img
-                                                src={product.images[0].url}
-                                                alt={product.name}
-                                                className="product-image"
-                                                loading="lazy"
-                                            />
+                                            <>
+                                                <img
+                                                    src={product.images[0].url}
+                                                    alt={product.name}
+                                                    className="product-image"
+                                                    loading="lazy"
+                                                />
+                                                {product.images?.[1]?.url && (
+                                                    <img
+                                                        src={product.images[1].url}
+                                                        alt=""
+                                                        className="product-image is-alt"
+                                                        loading="lazy"
+                                                    />
+                                                )}
+                                            </>
                                         ) : (
-                                            <span>Image coming soon</span>
+                                            <span>HAVEN</span>
                                         )}
                                     </div>
                                 </Link>
@@ -262,7 +312,19 @@ function Products({ category, title }) {
                                     }
                                     aria-pressed={saved}
                                 >
-                                    {saved ? "♥" : "♡"}
+                                    <svg
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 24 24"
+                                        fill={saved ? "currentColor" : "none"}
+                                        stroke="currentColor"
+                                        strokeWidth="1.25"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        aria-hidden="true"
+                                    >
+                                        <path d="M12 20.2s-7.5-4.5-7.5-10.1A4.3 4.3 0 0 1 12 7.5a4.3 4.3 0 0 1 7.5 2.6c0 5.6-7.5 10.1-7.5 10.1Z" />
+                                    </svg>
                                 </button>
                             </div>
 
@@ -271,14 +333,14 @@ function Products({ category, title }) {
                                 className="product-card-link product-card-text-link"
                             >
                                 <h2>{product.name}</h2>
-                                <p>{product.description}</p>
-
+                                <p className="product-card-meta">
+                                    {product.category}
+                                    {product.subcategory
+                                        ? ` · ${product.subcategory}`
+                                        : ""}
+                                </p>
                                 <p className="product-price">
                                     ₹{Number(product.price).toLocaleString("en-IN")}
-                                </p>
-
-                                <p>
-                                    {product.category} · {product.subcategory}
                                 </p>
                             </Link>
                         </article>
@@ -287,7 +349,7 @@ function Products({ category, title }) {
             </div>
 
             {visibleProducts.length === 0 && (
-                <p>
+                <p className="products-empty">
                     {products.length === 0
                         ? "No products available yet."
                         : "No products match your selection."}
