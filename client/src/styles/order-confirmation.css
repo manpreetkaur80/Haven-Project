@@ -1,3 +1,13 @@
+/* HAVEN theme: full-width page (release the global #root cap in index.css). */
+html:has(.confirmation-page) #root {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    border-inline: 0;
+    text-align: left;
+    background: #f7f3ec;
+}
+
 
 .confirmation-page {
     min-height: 100vh;
@@ -5,17 +15,17 @@
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    background: #f8f7f4;
+    background: #f7f3ec;
     color: #252522;
-    font-family: Arial, sans-serif;
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
 .confirmation-card {
     width: 100%;
     max-width: 680px;
     padding: 44px;
-    background: #ffffff;
-    border: 1px solid #e9e6df;
+    background: #fffdf9;
+    border: 1px solid #ddd4c4;
 }
 
 .confirmation-check {
@@ -31,7 +41,7 @@
 
 .confirmation-eyebrow {
     margin-bottom: 14px;
-    color: #77756b;
+    color: #6f6456;
     font-size: 11px;
     letter-spacing: 2px;
     line-height: 1.6;
@@ -54,8 +64,8 @@
     display: grid;
     gap: 18px;
     padding: 22px 0;
-    border-top: 1px solid #e9e6df;
-    border-bottom: 1px solid #e9e6df;
+    border-top: 1px solid #ddd4c4;
+    border-bottom: 1px solid #ddd4c4;
 }
 
 .confirmation-order-box div {
@@ -66,7 +76,7 @@
 
 .confirmation-order-box span,
 .confirmation-item-info span {
-    color: #77756b;
+    color: #6f6456;
     font-size: 13px;
 }
 
@@ -91,7 +101,7 @@
     align-items: center;
     gap: 16px;
     padding: 16px 0;
-    border-bottom: 1px solid #efede8;
+    border-bottom: 1px solid #ebe4d8;
 }
 
 .confirmation-item img,
@@ -100,13 +110,13 @@
     height: 88px;
     flex-shrink: 0;
     object-fit: cover;
-    background: #f0eee8;
+    background: #ebe4d8;
 }
 
 .confirmation-image-placeholder {
     display: grid;
     place-items: center;
-    color: #77756b;
+    color: #6f6456;
     font-size: 10px;
     letter-spacing: 1px;
 }
@@ -144,7 +154,7 @@
 
 .confirmation-payment-note {
     margin-bottom: 24px;
-    color: #77756b;
+    color: #6f6456;
     font-size: 13px;
     line-height: 1.7;
 }
@@ -153,7 +163,7 @@
     display: block;
     width: 100%;
     padding: 16px;
-    background: #292923;
+    background: #2a2723;
     color: #ffffff;
     text-align: center;
     text-decoration: none;
@@ -163,7 +173,7 @@
 }
 
 .confirmation-button:hover {
-    background: #48483f;
+    background: #4a443c;
 }
 
 .confirmation-home-link {

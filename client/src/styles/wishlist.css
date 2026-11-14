@@ -1,28 +1,49 @@
+/* HAVEN theme: full-width page (release the global #root cap in index.css). */
+html:has(.wishlist-page) #root {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    border-inline: 0;
+    text-align: left;
+    background: #f7f3ec;
+}
+
 
 .wishlist-page {
+    box-sizing: border-box;
+    flex: 1;
+    width: 100%;
     max-width: 1440px;
     min-height: 70vh;
     margin: 0 auto;
-    padding: 64px 5%;
-    color: #302820;
+    padding: clamp(40px, 7vh, 72px) clamp(20px, 4.5vw, 72px) clamp(64px, 10vh, 120px);
+    background: #f7f3ec;
+    color: #2a2723;
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    text-align: left;
 }
 
 .wishlist-heading {
     margin-bottom: 42px;
-    text-align: center;
+    padding-bottom: 28px;
+    border-bottom: 1px solid #ddd4c4;
+    text-align: left;
 }
 
 .wishlist-eyebrow {
     margin-bottom: 12px;
-    color: #8a7967;
+    color: #8a7d6c;
     font-size: 11px;
-    letter-spacing: 3px;
+    letter-spacing: 0.22em;
 }
 
 .wishlist-heading h1 {
     margin: 0 0 12px;
-    font-size: clamp(32px, 4vw, 48px);
+    font-family: "Cormorant Garamond", "Cormorant", Georgia, serif;
+    font-size: clamp(38px, 5vw, 64px);
     font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 1;
 }
 
 .wishlist-heading > p:last-child {
@@ -33,12 +54,13 @@
 .wishlist-empty {
     padding: 90px 20px;
     text-align: center;
-    background: #f8f5f0;
+    background: #f7f3ec;
 }
 
 .wishlist-empty h2 {
     margin-bottom: 12px;
-    font-size: 25px;
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 32px;
     font-weight: 400;
 }
 
@@ -50,21 +72,21 @@
 .wishlist-shop-button {
     display: inline-block;
     padding: 14px 25px;
-    background: #302820;
-    color: white;
+    background: #2a2723;
+    color: #f7f3ec;
     text-decoration: none;
     font-size: 13px;
     transition: background 0.2s ease;
 }
 
 .wishlist-shop-button:hover {
-    background: #655344;
+    background: #4a443c;
 }
 
 .wishlist-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 32px 22px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(28px, 4vw, 56px) clamp(14px, 1.8vw, 28px);
 }
 
 .wishlist-card {
@@ -74,8 +96,8 @@
 .wishlist-image-link {
     display: block;
     overflow: hidden;
-    aspect-ratio: 3 / 4;
-    background: #f5f2ed;
+    aspect-ratio: 4 / 5;
+    background: #ebe4d8;
 }
 
 .wishlist-image-link img {
@@ -125,7 +147,7 @@
 
 .wishlist-card-info .wishlist-price {
     margin-top: 12px;
-    color: #302820;
+    color: #2a2723;
     font-size: 14px;
 }
 
@@ -141,14 +163,20 @@
 }
 
 .wishlist-remove-button:hover {
-    color: #a04e42;
-    border-color: #a04e42;
+    color: #7a3b2e;
+    border-color: #7a3b2e;
 }
 
 .wishlist-error {
     margin-bottom: 24px;
-    color: #a04e42;
+    color: #7a3b2e;
     text-align: center;
+}
+
+@media (max-width: 1100px) {
+    .wishlist-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
 }
 
 @media (max-width: 800px) {
@@ -164,7 +192,7 @@
 
 @media (max-width: 480px) {
     .wishlist-grid {
-        grid-template-columns: 1fr;
-        gap: 28px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 28px 12px;
     }
 }
