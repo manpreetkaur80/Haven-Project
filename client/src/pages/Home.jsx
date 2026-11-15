@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Intro, { INTRO_SEEN_KEY } from "../components/Intro";
 import Hero from "../components/Hero";
 import ProductStrip from "../components/ProductStrip";
 import ArrivalsBanner from "../components/ArrivalsBanner";
@@ -17,6 +18,16 @@ const STRIP_LIMIT = 10;
 function Home() {
     const [products, setProducts] = useState([]);
     const [status, setStatus] = useState("loading"); // loading | ready | error
+
+    /* The entry sequence plays once per visit (not for reduced-motion users). */
+    const [showIntro] = useState(() => {
+        try {
+            const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+            return !reduced && sessionStorage.getItem(INTRO_SEEN_KEY) !== "1";
+        } catch {
+            return true;
+        }
+    });
 
     /* Lets the stylesheet release the global #root width cap on this page. */
     useEffect(() => {
@@ -49,6 +60,7 @@ function Home() {
 
     return (
         <main className="haven-home">
+            {showIntro && <Intro />}
             <Hero />
             <ProductStrip products={stripProducts} status={status} />
             <ArrivalsBanner />

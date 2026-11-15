@@ -101,8 +101,15 @@ function Header() {
 
         const update = () => {
             frame = 0;
-            const threshold =
-                pathname === "/" ? Math.max(window.innerHeight - 96, 200) : 80;
+            /* Home: solid once the hero has scrolled away (the entry sequence,
+               if present, sits above it). Other hero pages: after a short scroll. */
+            let threshold = 80;
+            if (pathname === "/") {
+                const hero = document.querySelector(".haven-hero");
+                threshold = hero
+                    ? hero.getBoundingClientRect().bottom + window.scrollY - 96
+                    : Math.max(window.innerHeight - 96, 200);
+            }
             setScrolled(window.scrollY > threshold);
         };
 

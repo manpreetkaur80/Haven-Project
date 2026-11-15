@@ -42,3 +42,14 @@ Each page has a full-screen hero. Replace these files (same names) with your own
 | /new-arrivals | haven-newarrivals.mp4 | haven-newarrivals-poster.jpg |
 
 Landscape 1920x1080, H.264, muted, 6-15 MB. For a photo-only hero, replace the poster and delete the .mp4.
+
+## Entry sequence (scroll intro on the home page)
+
+Plays once per visit. Replace these photos (same names):
+
+| File | Used for |
+|---|---|
+| haven-intro-1.jpg / haven-intro-2.jpg / haven-intro-3.jpg | The three full-height panels behind the giant HAVEN wordmark (portrait crops work best, ~1000x1800) |
+| haven-intro-core.jpg | The full-screen photo that opens from the centre (landscape, 2400x1350) |
+
+Visitors can skip it, it is skipped on return visits in the same session, and it is skipped for people who prefer reduced motion.
