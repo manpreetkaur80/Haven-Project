@@ -3,7 +3,7 @@
     max-width: 1450px;
     margin: 0 auto;
     padding: 55px 5%;
-    color: #40352f;
+    color: #2a2723;
     min-height: 80vh;
 }
 
@@ -23,19 +23,19 @@
 
 .admin-products-heading p,
 .admin-section-heading p {
-    color: #82766e;
+    color: #6f6456;
 }
 
 .admin-eyebrow {
     font-size: 11px;
     letter-spacing: 2px;
-    font-weight: 700;
-    color: #9a806d !important;
+    font-weight: 500;
+    color: #8a7d6c !important;
 }
 
 .admin-add-product-btn,
 .admin-save-btn {
-    background: #40352f;
+    background: #2a2723;
     color: white;
     border: none;
     padding: 13px 22px;
@@ -47,14 +47,14 @@
 
 .admin-add-product-btn:hover,
 .admin-save-btn:hover {
-    background: #786252;
+    background: #6f6456;
 }
 
 .admin-message,
 .admin-error {
     padding: 13px 16px;
     margin: 20px 0;
-    border-radius: 3px;
+    border-radius: 0;
 }
 
 .admin-message {
@@ -71,8 +71,8 @@
 .admin-product-list-section {
     margin-top: 45px;
     padding: 28px;
-    border: 1px solid #e7e0da;
-    background: #fff;
+    border: 1px solid #ddd4c4;
+    background: #fffdf9;
 }
 
 .admin-section-heading h2 {
@@ -84,8 +84,8 @@
 .admin-refresh-btn {
     padding: 10px 17px;
     background: white;
-    border: 1px solid #cfc4ba;
-    color: #40352f;
+    border: 1px solid #ddd4c4;
+    color: #2a2723;
     cursor: pointer;
 }
 
@@ -109,7 +109,7 @@
 
 .admin-form-field label {
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 500;
 }
 
 .admin-form-field input,
@@ -118,9 +118,9 @@
 .admin-product-search {
     width: 100%;
     padding: 12px;
-    border: 1px solid #d9d0c8;
-    background: #fff;
-    color: #40352f;
+    border: 1px solid #ddd4c4;
+    background: #fffdf9;
+    color: #2a2723;
     font: inherit;
     outline: none;
     box-sizing: border-box;
@@ -130,7 +130,7 @@
 .admin-form-field select:focus,
 .admin-form-field textarea:focus,
 .admin-product-search:focus {
-    border-color: #806b59;
+    border-color: #6f6456;
 }
 
 .admin-form-field textarea {
@@ -139,7 +139,7 @@
 
 .admin-form-field small,
 .admin-current-images p {
-    color: #82766e;
+    color: #6f6456;
     font-size: 12px;
 }
 
@@ -159,7 +159,7 @@
     width: 100px;
     height: 115px;
     object-fit: cover;
-    border: 1px solid #e7e0da;
+    border: 1px solid #ddd4c4;
 }
 
 .admin-checkboxes {
@@ -207,12 +207,12 @@
 .admin-product-table td {
     padding: 16px 13px;
     text-align: left;
-    border-bottom: 1px solid #eee8e2;
+    border-bottom: 1px solid #ebe4d8;
 }
 
 .admin-product-table th {
-    background: #f8f5f1;
-    color: #65564b;
+    background: #f7f3ec;
+    color: #4a443c;
     font-size: 12px;
     text-transform: uppercase;
     letter-spacing: 0.7px;
@@ -230,7 +230,7 @@
     width: 58px;
     height: 68px;
     object-fit: cover;
-    background: #f1ece6;
+    background: #ebe4d8;
 }
 
 .admin-no-image {
@@ -238,7 +238,7 @@
     align-items: center;
     justify-content: center;
     font-size: 10px;
-    color: #82766e;
+    color: #6f6456;
 }
 
 .admin-product-info strong,
@@ -248,13 +248,13 @@
 
 .admin-product-info small {
     margin-top: 5px;
-    color: #82766e;
+    color: #6f6456;
 }
 
 .admin-status {
     display: inline-block;
     padding: 5px 9px;
-    border-radius: 20px;
+    border-radius: 0;
     font-size: 11px;
 }
 
@@ -264,8 +264,8 @@
 }
 
 .admin-status.unpublished {
-    background: #f4eee8;
-    color: #80634c;
+    background: #ebe4d8;
+    color: #6f6456;
 }
 
 .admin-featured-label {
@@ -281,14 +281,14 @@
 
 .admin-product-actions button {
     padding: 7px 12px;
-    background: #f4f0eb;
-    border: 1px solid #ddd2c7;
-    color: #40352f;
+    background: #f7f3ec;
+    border: 1px solid #ddd4c4;
+    color: #2a2723;
     cursor: pointer;
 }
 
 .admin-product-actions button:hover {
-    background: #e9e0d7;
+    background: #ddd4c4;
 }
 
 .admin-product-actions .admin-delete-btn {
@@ -300,7 +300,7 @@
 .admin-empty-message {
     padding: 35px 10px;
     text-align: center;
-    color: #82766e;
+    color: #6f6456;
 }
 
 @media (max-width: 700px) {
@@ -332,3 +332,19 @@
         gap: 13px;
     }
 }
+
+/* Editorial typography */
+.admin-products-page {
+    font-family: "Inter", system-ui, sans-serif;
+    padding: clamp(32px, 5vw, 56px) clamp(20px, 4vw, 56px) 80px;
+}
+.admin-products-page h1,
+.admin-products-page h2 {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-weight: 400;
+}
+.admin-products-page h1 { font-size: clamp(34px, 4vw, 48px); line-height: 1; }
+.admin-products-page h2 { font-size: 30px; }
+.admin-products-page input,
+.admin-products-page select,
+.admin-products-page textarea { border-radius: 0; }

@@ -11,6 +11,7 @@ import Signup from "./pages/Signup";
 import Profile from "./pages/Profile";
 import Wishlist from "./pages/Wishlist";
 import AdminOrders from "./admin/AdminOrders";
+import AdminLayout from "./components/AdminLayout";
 import Header from "./components/Header";
 import Home from "./pages/Home";
 import AddProduct from "./admin/AddProduct";
@@ -70,7 +71,9 @@ function App() {
                                 path="/admin/products"
                                 element={
                                     <ProtectedRoute adminOnly>
-                                        <AdminProducts />
+                                        <AdminLayout>
+<AdminProducts />
+</AdminLayout>
                                     </ProtectedRoute>
                                 }
                             />
@@ -78,7 +81,9 @@ function App() {
                                 path="/admin/orders"
                                 element={
                                     <ProtectedRoute adminOnly>
-                                        <AdminOrders />
+                                        <AdminLayout>
+<AdminOrders />
+</AdminLayout>
                                     </ProtectedRoute>
                                 }
                             />
@@ -197,7 +202,9 @@ function App() {
                                 path="/admin"
                                 element={
                                     <ProtectedRoute adminOnly>
-                                        <AdminDashboard />
+                                        <AdminLayout>
+<AdminDashboard />
+</AdminLayout>
                                     </ProtectedRoute>
                                 }
                             />
@@ -206,7 +213,9 @@ function App() {
                                 path="/admin/products/new"
                                 element={
                                     <ProtectedRoute adminOnly>
-                                        <AddProduct />
+                                        <AdminLayout>
+<AddProduct />
+</AdminLayout>
                                     </ProtectedRoute>
                                 }
                             />

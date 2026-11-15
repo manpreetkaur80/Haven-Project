@@ -209,33 +209,32 @@ const handleMarkRefunded = async () => {
         });
 
     if (loading) {
-        return <main><p>Loading orders...</p></main>;
+        return <main className="admin-orders-page"><p className="admin-loading">Loading orders...</p></main>;
     }
 
     return (
-        <main style={{ padding: "30px" }}>
-            <h1>Manage Orders</h1>
-            <p>View customer orders and update their status.</p>
+        <main className="admin-orders-page">
+            <header className="admin-page-head">
+                <div>
+                    <p className="admin-eyebrow">Orders</p>
+                    <h1>Manage orders</h1>
+                    <p>View customer orders and update their status.</p>
+                </div>
+                <button type="button" className="admin-btn admin-btn-ghost" onClick={fetchOrders}>
+                    Refresh orders
+                </button>
+            </header>
 
-            {error && <p role="alert" style={{ color: "crimson" }}>{error}</p>}
-            {message && <p role="status" style={{ color: "green" }}>{message}</p>}
+            {error && <p role="alert" className="admin-alert admin-alert-error">{error}</p>}
+            {message && <p role="status" className="admin-alert admin-alert-ok">{message}</p>}
 
-            <button type="button" onClick={fetchOrders}>
-                Refresh Orders
-            </button>
-
-            <h2>All Orders ({orders.length})</h2>
+            <h2 className="admin-h2">All orders <span>({orders.length})</span></h2>
 
             {orders.length === 0 ? (
                 <p>No orders have been placed yet.</p>
             ) : (
-                <div style={{ overflowX: "auto" }}>
-                    <table
-                        border="1"
-                        cellPadding="12"
-                        cellSpacing="0"
-                        width="100%"
-                    >
+                <div className="admin-table-wrap">
+                    <table className="admin-table">
                         <thead>
                             <tr>
                                 <th>Order ID</th>
@@ -256,13 +255,14 @@ const handleMarkRefunded = async () => {
                                     <td>{formatDate(order.createdAt)}</td>
                                     <td>{order.paymentMethod}</td>
                                     <td>{formatCurrency(order.totalAmount)}</td>
-                                    <td>{order.orderStatus}</td>
+                                    <td><span className={`admin-badge status-${(order.orderStatus || "").toLowerCase().replace(/\s+/g, "-")}`}>{order.orderStatus}</span></td>
                                     <td>
                                         <button
                                             type="button"
+                                            className="admin-btn admin-btn-ghost admin-btn-sm"
                                             onClick={() => handleSelectOrder(order)}
                                         >
-                                            View Details
+                                            View details
                                         </button>
                                     </td>
                                 </tr>
@@ -273,16 +273,17 @@ const handleMarkRefunded = async () => {
             )}
 
             {selectedOrder && (
-                <section style={{ marginTop: "40px" }}>
+                <section className="admin-order-detail">
                     <h2>
                         Order #{selectedOrder._id.slice(-8).toUpperCase()}
                     </h2>
 
                     <button
                         type="button"
+                        className="admin-btn admin-btn-ghost admin-btn-sm admin-detail-close"
                         onClick={() => setSelectedOrder(null)}
                     >
-                        Close Details
+                        Close details
                     </button>
 
                     <h3>Customer Details</h3>
@@ -303,12 +304,7 @@ const handleMarkRefunded = async () => {
                     {selectedOrder.items?.map((item, index) => (
                         <div
                             key={`${item.product || item.name}-${index}`}
-                            style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "15px",
-                                marginBottom: "15px",
-                            }}
+                            className="admin-order-item"
                         >
                             {item.image && (
                                 <img
@@ -316,7 +312,6 @@ const handleMarkRefunded = async () => {
                                     alt={item.name}
                                     width="70"
                                     height="85"
-                                    style={{ objectFit: "cover" }}
                                 />
                             )}
 
@@ -354,6 +349,7 @@ const handleMarkRefunded = async () => {
 
                     <button
                         type="button"
+                        className="admin-btn"
                         onClick={handleUpdateStatus}
                         disabled={
                             updating ||
@@ -385,6 +381,7 @@ const handleMarkRefunded = async () => {
         <div>
             <button
                 type="button"
+                className="admin-btn"
                 disabled={updating}
                 onClick={() => handleReturnReview("Approved")}
             >
@@ -393,6 +390,7 @@ const handleMarkRefunded = async () => {
 
             <button
                 type="button"
+                className="admin-btn admin-btn-ghost"
                 disabled={updating}
                 onClick={() => handleReturnReview("Rejected")}
             >
@@ -412,6 +410,7 @@ const handleMarkRefunded = async () => {
 
         <button
             type="button"
+            className="admin-btn"
             disabled={updating}
             onClick={handleMarkReturned}
         >
@@ -436,6 +435,7 @@ const handleMarkRefunded = async () => {
         {selectedOrder.paymentStatus === "Paid" ? (
             <button
                 type="button"
+                className="admin-btn"
                 disabled={updating}
                 onClick={handleMarkRefunded}
             >

@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import "../styles/products.css";
+import "../styles/admin.css";
 
 const initialFormData = {
     name: "",
@@ -209,17 +209,22 @@ function AddProduct() {
 
     return (
         <main className="admin-product-page">
-            <h1>Add New Product</h1>
-            <p>Enter the details for your HAVEN collection.</p>
+            <header className="admin-page-head">
+                <div>
+                    <p className="admin-eyebrow">Catalogue</p>
+                    <h1>Add new product</h1>
+                    <p>Enter the details for your HAVEN collection.</p>
+                </div>
+            </header>
 
             {message && (
-                <p role="status" style={{ color: "green" }}>
+                <p role="status" className="admin-alert admin-alert-ok">
                     {message}
                 </p>
             )}
 
             {error && (
-                <p role="alert" style={{ color: "crimson" }}>
+                <p role="alert" className="admin-alert admin-alert-error">
                     {error}
                 </p>
             )}
@@ -335,7 +340,7 @@ function AddProduct() {
                     </div>
                 )}
 
-                <button type="submit" disabled={loading}>
+                <button type="submit" className="admin-btn" disabled={loading}>
                     {loading ? "Uploading Product..." : "Save Product"}
                 </button>
             </form>

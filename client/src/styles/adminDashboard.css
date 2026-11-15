@@ -4,7 +4,7 @@
     min-height: 80vh;
     margin: 0 auto;
     padding: 55px 5%;
-    color: #40352f;
+    color: #2a2723;
 }
 
 .admin-dashboard-header,
@@ -26,26 +26,26 @@
 }
 
 .admin-dashboard-header p {
-    color: #82766e;
+    color: #6f6456;
 }
 
 .dashboard-eyebrow {
-    color: #9a806d !important;
+    color: #8a7d6c !important;
     font-size: 11px;
     letter-spacing: 2px;
-    font-weight: 700;
+    font-weight: 500;
 }
 
 .dashboard-refresh-btn {
     padding: 12px 19px;
-    border: 1px solid #cfc4ba;
-    background: #fff;
-    color: #40352f;
+    border: 1px solid #ddd4c4;
+    background: #fffdf9;
+    color: #2a2723;
     cursor: pointer;
 }
 
 .dashboard-refresh-btn:hover {
-    background: #f5f0eb;
+    background: #ebe4d8;
 }
 
 .dashboard-stats {
@@ -57,33 +57,33 @@
 .dashboard-stat-card {
     min-height: 145px;
     padding: 23px;
-    border: 1px solid #e7e0da;
-    background: #fff;
+    border: 1px solid #ddd4c4;
+    background: #fffdf9;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
 
 .dashboard-stat-label {
-    color: #82766e;
+    color: #6f6456;
     font-size: 13px;
 }
 
 .dashboard-stat-card strong {
     font-size: 31px;
     font-weight: 500;
-    color: #40352f;
+    color: #2a2723;
     overflow-wrap: anywhere;
 }
 
 .dashboard-stat-card small {
-    color: #958980;
+    color: #8a7d6c;
     font-size: 11px;
 }
 
 .dashboard-stat-highlight {
-    background: #f5f0eb;
-    border-color: #e8ded4;
+    background: #ebe4d8;
+    border-color: #ddd4c4;
 }
 
 .dashboard-quick-section,
@@ -112,19 +112,19 @@
     flex-direction: column;
     min-height: 185px;
     padding: 25px;
-    border: 1px solid #e7e0da;
-    color: #40352f;
+    border: 1px solid #ddd4c4;
+    color: #2a2723;
     text-decoration: none;
     transition: background 0.2s, border-color 0.2s;
 }
 
 .dashboard-quick-card:hover {
-    background: #f8f5f1;
-    border-color: #bca895;
+    background: #f7f3ec;
+    border-color: #8a7d6c;
 }
 
 .dashboard-quick-number {
-    color: #a38d79;
+    color: #8a7d6c;
     font-size: 12px;
     letter-spacing: 1px;
 }
@@ -136,7 +136,7 @@
 }
 
 .dashboard-quick-card p {
-    color: #82766e;
+    color: #6f6456;
     font-size: 13px;
     line-height: 1.6;
     margin: 0;
@@ -146,11 +146,11 @@
     margin-top: auto;
     padding-top: 20px;
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 500;
 }
 
 .dashboard-view-all {
-    color: #786252;
+    color: #6f6456;
     text-decoration: none;
     font-size: 13px;
 }
@@ -162,7 +162,7 @@
 .dashboard-orders-wrapper {
     width: 100%;
     overflow-x: auto;
-    border: 1px solid #e7e0da;
+    border: 1px solid #ddd4c4;
 }
 
 .dashboard-orders-table {
@@ -170,19 +170,19 @@
     min-width: 750px;
     border-collapse: collapse;
     font-size: 13px;
-    background: #fff;
+    background: #fffdf9;
 }
 
 .dashboard-orders-table th,
 .dashboard-orders-table td {
     padding: 16px;
     text-align: left;
-    border-bottom: 1px solid #eee8e2;
+    border-bottom: 1px solid #ebe4d8;
 }
 
 .dashboard-orders-table th {
-    background: #f8f5f1;
-    color: #65564b;
+    background: #f7f3ec;
+    color: #4a443c;
     font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.7px;
@@ -191,9 +191,9 @@
 .dashboard-order-status {
     display: inline-block;
     padding: 6px 10px;
-    border-radius: 20px;
-    background: #f1ece6;
-    color: #665747;
+    border-radius: 0;
+    background: #ebe4d8;
+    color: #4a443c;
     font-size: 11px;
     white-space: nowrap;
 }
@@ -218,19 +218,19 @@
 .status-placed,
 .status-confirmed,
 .status-processing {
-    background: #f5f0e5;
+    background: #ebe4d8;
     color: #80683c;
 }
 
 .dashboard-no-orders {
     padding: 40px 20px;
     text-align: center;
-    border: 1px solid #e7e0da;
-    color: #82766e;
+    border: 1px solid #ddd4c4;
+    color: #6f6456;
 }
 
 .dashboard-no-orders h3 {
-    color: #40352f;
+    color: #2a2723;
     font-weight: 500;
 }
 
@@ -277,3 +277,18 @@
         flex-direction: column;
     }
 }
+
+/* Editorial typography */
+.admin-dashboard-page {
+    font-family: "Inter", system-ui, sans-serif;
+    padding: clamp(32px, 5vw, 56px) clamp(20px, 4vw, 56px) 80px;
+}
+.admin-dashboard-header h1,
+.dashboard-section-heading h2 {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-weight: 400;
+}
+.admin-dashboard-header h1 { font-size: clamp(34px, 4vw, 48px); line-height: 1; }
+.dashboard-section-heading h2 { font-size: 30px; margin: 6px 0 0; }
+.dashboard-quick-card h3 { font-family: "Cormorant Garamond", Georgia, serif; font-weight: 500; font-size: 24px; }
+.dashboard-stat-card strong { font-family: "Cormorant Garamond", Georgia, serif; font-size: 38px; }

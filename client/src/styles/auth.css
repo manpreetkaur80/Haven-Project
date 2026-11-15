@@ -1,29 +1,40 @@
+/* HAVEN theme: full-width page (release the global #root cap in index.css). */
+html:has(.auth-page) #root {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  border-inline: 0;
+  text-align: left;
+  background: #f7f3ec;
+}
+
 
 .auth-page {
-    min-height: 100vh;
+    flex: 1;
+    min-height: calc(100vh - 84px);
     padding: 40px 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #f8f7f4;
-    color: #292923;
-    font-family: Arial, sans-serif;
+    background: #f7f3ec;
+    color: #2a2723;
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
 .auth-card {
     width: 100%;
     max-width: 440px;
     padding: 42px;
-    background: #fff;
-    border: 1px solid #e8e5de;
+    background: #fffdf9;
+    border: 1px solid #ddd4c4;
 }
 
 .auth-brand {
     display: block;
     margin-bottom: 34px;
-    color: #292923;
+    color: #2a2723;
     text-align: center;
-    font-family: Georgia, serif;
+    font-family: "Cormorant Garamond", "Cormorant", Georgia, serif;
     font-size: 32px;
     letter-spacing: 7px;
     text-decoration: none;
@@ -31,7 +42,7 @@
 
 .auth-eyebrow {
     margin-bottom: 12px;
-    color: #858174;
+    color: #6f6456;
     font-size: 10px;
     letter-spacing: 2px;
     text-align: center;
@@ -46,7 +57,7 @@
 
 .auth-description {
     margin-bottom: 28px;
-    color: #77756b;
+    color: #6f6456;
     font-size: 14px;
     line-height: 1.7;
     text-align: center;
@@ -59,19 +70,22 @@
 }
 
 .auth-card input {
+    box-sizing: border-box;
     width: 100%;
+    height: 46px;
     min-height: 46px;
-    padding: 12px;
-    border: 1px solid #dedbd3;
+    margin: 0;
+    padding: 0 14px;
+    border: 1px solid #ddd4c4;
     border-radius: 0;
-    background: #fff;
-    color: #292923;
+    background: #fffdf9;
+    color: #2a2723;
     font: inherit;
     font-size: 14px;
 }
 
 .auth-card input:focus {
-    outline: 1px solid #77756b;
+    outline: 1px solid #ddd4c4;
     outline-offset: 1px;
 }
 
@@ -80,8 +94,9 @@
     min-height: 48px;
     margin-top: 26px;
     border: 0;
-    background: #292923;
-    color: #fff;
+    background: #2a2723;
+    color: #f7f3ec;
+    box-sizing: border-box;
     cursor: pointer;
     font-size: 13px;
     letter-spacing: 0.5px;
@@ -93,13 +108,13 @@
 }
 
 .auth-button:hover:not(:disabled) {
-    background: #48483f;
+    background: #4a443c;
 }
 
 .auth-error {
     padding: 12px;
-    border: 1px solid #d9b8b2;
-    background: #fff8f6;
+    border: 1px solid #ddd4c4;
+    background: #f7f3ec;
     color: #9b3026;
     font-size: 13px;
     line-height: 1.6;
@@ -107,14 +122,14 @@
 
 .auth-switch {
     margin: 24px 0 0;
-    color: #77756b;
+    color: #6f6456;
     font-size: 13px;
     line-height: 1.8;
     text-align: center;
 }
 
 .auth-switch a {
-    color: #292923;
+    color: #2a2723;
     text-underline-offset: 4px;
 }
 
@@ -125,5 +140,28 @@
 
     .auth-card {
         padding: 28px 22px;
+    }
+}
+
+/* The site header already carries the wordmark. */
+.auth-brand {
+    display: none;
+}
+
+.auth-card h1 {
+    font-family: "Cormorant Garamond", "Cormorant", Georgia, serif;
+    font-size: clamp(34px, 4vw, 44px);
+    letter-spacing: -0.01em;
+    line-height: 1.05;
+}
+
+.auth-eyebrow {
+    letter-spacing: 0.22em;
+}
+
+@media (max-width: 900px) {
+    .auth-page {
+        min-height: calc(100vh - 64px);
+        align-items: flex-start;
     }
 }

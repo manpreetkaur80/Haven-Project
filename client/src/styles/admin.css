@@ -1,0 +1,579 @@
+/* ==========================================================
+   HAVEN — Admin shell + shared admin components
+   ========================================================== */
+
+html:has(.admin-shell) #root {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    border-inline: 0;
+    text-align: left;
+    background: #f7f3ec;
+}
+
+.admin-shell {
+    flex: 1;
+    min-height: 100svh;
+    background: #f7f3ec;
+    color: #2a2723;
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+.admin-shell *,
+.admin-shell *::before,
+.admin-shell *::after {
+    box-sizing: border-box;
+}
+
+/* ---------- Top bar ---------- */
+
+.admin-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 32px;
+    height: 68px;
+    padding: 0 clamp(20px, 4vw, 56px);
+    background: rgba(247, 243, 236, 0.97);
+    border-bottom: 1px solid #ddd4c4;
+}
+
+.admin-brand {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    color: #2a2723;
+    text-decoration: none;
+}
+
+.admin-brand span {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 26px;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+}
+
+.admin-brand small {
+    color: #8a7d6c;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+}
+
+.admin-nav {
+    display: flex;
+    gap: clamp(16px, 2.4vw, 36px);
+}
+
+.admin-nav a,
+.admin-topbar-actions a,
+.admin-topbar-actions button {
+    position: relative;
+    padding: 6px 0;
+    border: 0;
+    background: transparent;
+    color: #4a443c;
+    font: inherit;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-decoration: none;
+    text-transform: uppercase;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.admin-nav a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background: #2a2723;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+}
+
+.admin-nav a:hover,
+.admin-nav a.active,
+.admin-topbar-actions a:hover,
+.admin-topbar-actions button:hover {
+    color: #2a2723;
+}
+
+.admin-nav a:hover::after,
+.admin-nav a.active::after {
+    transform: scaleX(1);
+}
+
+.admin-topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.admin-content {
+    width: 100%;
+}
+
+/* ---------- Page heads, headings ---------- */
+
+.admin-page-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 36px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid #ddd4c4;
+}
+
+.admin-page-head h1 {
+    margin: 6px 0 8px;
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: clamp(34px, 4vw, 48px);
+    font-weight: 400;
+    line-height: 1;
+}
+
+.admin-page-head p:not(.admin-eyebrow) {
+    margin: 0;
+    color: #6f6456;
+    font-size: 14px;
+}
+
+.admin-eyebrow {
+    margin: 0;
+    color: #8a7d6c;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+}
+
+.admin-h2 {
+    margin: 0 0 18px;
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 30px;
+    font-weight: 400;
+}
+
+.admin-h2 span {
+    color: #8a7d6c;
+    font-size: 20px;
+}
+
+.admin-loading {
+    color: #6f6456;
+}
+
+/* ---------- Buttons ---------- */
+
+.admin-btn {
+    min-height: 44px;
+    padding: 0 26px;
+    border: 1px solid #2a2723;
+    border-radius: 0;
+    background: #2a2723;
+    color: #f7f3ec;
+    font: inherit;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.admin-btn:hover:not(:disabled) {
+    background: #4a443c;
+    border-color: #4a443c;
+}
+
+.admin-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.admin-btn-ghost {
+    background: transparent;
+    color: #2a2723;
+    border-color: #ddd4c4;
+}
+
+.admin-btn-ghost:hover:not(:disabled) {
+    background: #ebe4d8;
+    border-color: #2a2723;
+    color: #2a2723;
+}
+
+.admin-btn-sm {
+    min-height: 36px;
+    padding: 0 16px;
+    font-size: 11px;
+}
+
+/* ---------- Alerts ---------- */
+
+.admin-alert {
+    margin: 0 0 24px;
+    padding: 12px 16px;
+    border: 1px solid #ddd4c4;
+    border-left-width: 3px;
+    background: #fffdf9;
+    font-size: 14px;
+}
+
+.admin-alert-error {
+    border-left-color: #7a3b2e;
+    color: #7a3b2e;
+}
+
+.admin-alert-ok {
+    border-left-color: #4f6b4a;
+    color: #3f5a3a;
+}
+
+/* ---------- Badges ---------- */
+
+.admin-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    background: #ebe4d8;
+    color: #4a443c;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+}
+
+.admin-badge.status-delivered {
+    background: #e6ece1;
+    color: #3f5a3a;
+}
+
+.admin-badge.status-cancelled,
+.admin-badge.status-refunded,
+.admin-badge.status-returned {
+    background: #f1e2dd;
+    color: #7a3b2e;
+}
+
+.admin-badge.status-shipped {
+    background: #e3e8ee;
+    color: #3d5169;
+}
+
+/* ---------- Tables ---------- */
+
+.admin-table-wrap {
+    overflow-x: auto;
+    border: 1px solid #ddd4c4;
+    background: #fffdf9;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.admin-table th {
+    padding: 14px 18px;
+    border-bottom: 1px solid #ddd4c4;
+    background: #f7f3ec;
+    color: #8a7d6c;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-align: left;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.admin-table td {
+    padding: 16px 18px;
+    border-bottom: 1px solid #ebe4d8;
+    vertical-align: middle;
+}
+
+.admin-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.admin-table tbody tr:hover {
+    background: #faf7f1;
+}
+
+/* ---------- Orders ---------- */
+
+.admin-orders-page,
+.admin-product-page {
+    max-width: 1450px;
+    min-height: 80vh;
+    margin: 0 auto;
+    padding: clamp(32px, 5vw, 56px) clamp(20px, 4vw, 56px) 80px;
+}
+
+.admin-order-detail {
+    max-width: 880px;
+    margin-top: 48px;
+    padding: clamp(24px, 4vw, 44px);
+    border: 1px solid #ddd4c4;
+    background: #fffdf9;
+}
+
+.admin-order-detail h2 {
+    margin: 0 0 16px;
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 32px;
+    font-weight: 400;
+}
+
+.admin-order-detail h3 {
+    margin: 32px 0 12px;
+    padding-top: 24px;
+    border-top: 1px solid #ebe4d8;
+    color: #8a7d6c;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+}
+
+.admin-order-detail p {
+    margin: 4px 0;
+    color: #4a443c;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.admin-order-detail strong {
+    color: #2a2723;
+    font-weight: 500;
+}
+
+.admin-order-detail hr {
+    margin: 32px 0 0;
+    border: 0;
+    border-top: 1px solid #ebe4d8;
+}
+
+.admin-order-detail select,
+.admin-order-detail textarea,
+.admin-order-detail label {
+    font: inherit;
+    font-size: 14px;
+}
+
+.admin-order-detail select {
+    min-height: 44px;
+    margin-right: 12px;
+    padding: 0 14px;
+    border: 1px solid #ddd4c4;
+    border-radius: 0;
+    background: #fffdf9;
+    color: #2a2723;
+}
+
+.admin-order-detail label {
+    display: block;
+    margin: 14px 0;
+    color: #6f6456;
+}
+
+.admin-order-detail textarea {
+    display: block;
+    width: 100%;
+    margin-top: 8px;
+    padding: 12px 14px;
+    border: 1px solid #ddd4c4;
+    border-radius: 0;
+    background: #fffdf9;
+    color: #2a2723;
+    resize: vertical;
+}
+
+.admin-order-detail select:focus,
+.admin-order-detail textarea:focus {
+    outline: 1px solid #2a2723;
+    outline-offset: 1px;
+}
+
+.admin-order-detail > div > div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.admin-order-detail > div:not(.admin-order-item) > .admin-btn {
+    margin-top: 12px;
+}
+
+.admin-detail-close {
+    float: right;
+    margin-top: -48px;
+}
+
+.admin-order-item {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 12px 0;
+    border-bottom: 1px solid #ebe4d8;
+}
+
+.admin-order-item img {
+    width: 70px;
+    height: 85px;
+    object-fit: cover;
+    background: #ebe4d8;
+}
+
+.admin-order-item p {
+    margin: 2px 0;
+    font-size: 13px;
+}
+
+/* ---------- Add product form ---------- */
+
+.admin-product-page .product-form {
+    display: grid;
+    gap: 6px;
+    max-width: 720px;
+    padding: clamp(24px, 4vw, 44px);
+    border: 1px solid #ddd4c4;
+    background: #fffdf9;
+}
+
+.admin-product-page .product-form label {
+    margin-top: 14px;
+    color: #4a443c;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+}
+
+.admin-product-page .product-form input:not([type="file"]),
+.admin-product-page .product-form select,
+.admin-product-page .product-form textarea {
+    width: 100%;
+    min-height: 46px;
+    padding: 0 14px;
+    border: 1px solid #ddd4c4;
+    border-radius: 0;
+    background: #fffdf9;
+    color: #2a2723;
+    font: inherit;
+    font-size: 14px;
+}
+
+.admin-product-page .product-form textarea {
+    min-height: 130px;
+    padding: 12px 14px;
+    resize: vertical;
+}
+
+.admin-product-page .product-form input[type="file"] {
+    padding: 12px;
+    border: 1px dashed #bfb39f;
+    background: #f7f3ec;
+    font: inherit;
+    font-size: 13px;
+}
+
+.admin-product-page .product-form input:focus,
+.admin-product-page .product-form select:focus,
+.admin-product-page .product-form textarea:focus {
+    outline: 1px solid #2a2723;
+    outline-offset: 1px;
+}
+
+.admin-product-page .image-field-help {
+    margin: 4px 0 0;
+    color: #8a7d6c;
+    font-size: 12px;
+}
+
+.admin-product-page .image-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.admin-product-page .product-image-preview {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    background: #ebe4d8;
+}
+
+.admin-product-page .product-form .admin-btn {
+    margin-top: 24px;
+    justify-self: start;
+}
+
+/* Access-required / loading states */
+.admin-product-page > button,
+.admin-orders-page > button {
+    min-height: 44px;
+    padding: 0 26px;
+    border: 1px solid #2a2723;
+    background: #2a2723;
+    color: #f7f3ec;
+    font: inherit;
+    cursor: pointer;
+}
+
+@media (max-width: 900px) {
+    .admin-topbar {
+        grid-template-columns: 1fr auto;
+        height: auto;
+        padding-top: 12px;
+        padding-bottom: 0;
+        gap: 8px 16px;
+    }
+
+    .admin-nav {
+        grid-column: 1 / -1;
+        order: 3;
+        gap: 22px;
+        overflow-x: auto;
+        padding-bottom: 10px;
+    }
+
+    .admin-topbar-actions {
+        gap: 16px;
+    }
+
+    .admin-page-head {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .admin-detail-close {
+        float: none;
+        margin: 0 0 8px;
+    }
+}
+
+.admin-order-detail .admin-order-item > div {
+    display: block;
+    margin: 0;
+}
+
+.admin-order-detail .admin-order-item strong {
+    display: block;
+    margin-bottom: 4px;
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 20px;
+}
+
+@media (max-width: 900px) {
+    .admin-table td {
+        white-space: nowrap;
+    }
+}
