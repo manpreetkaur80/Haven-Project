@@ -495,3 +495,44 @@
 .products-page .col-promo .col-promo-eyebrow {
     color: var(--c-caramel);
 }
+
+/* Slim toolbar: count + active filter + sort (type filtering lives in the band above) */
+.col-toolbar {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.col-status {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    color: #8a7d6c;
+    font-family: "Inter", system-ui, sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+
+.col-active-filter {
+    min-height: 34px;
+    padding: 0 14px;
+    border: 1px solid var(--c-espresso);
+    background: var(--c-espresso);
+    color: var(--c-cream);
+    font: inherit;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    cursor: pointer;
+}
+
+.col-cats li button.is-active {
+    border-color: var(--c-caramel);
+    background: rgba(185, 154, 118, 0.14);
+}
+
+@media (max-width: 900px) {
+    .col-toolbar {
+        flex-direction: row;
+        align-items: center;
+    }
+}

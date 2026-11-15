@@ -327,3 +327,90 @@ html:has(.checkout-page) #root {
         padding: 20px;
     }
 }
+
+/* ---------- v7: banner + dark summary + line fields ---------- */
+
+.page-banner + .checkout-page {
+    min-height: 0;
+    padding-top: clamp(36px, 6vh, 64px);
+}
+
+.checkout-field input,
+.checkout-field textarea {
+    padding: 14px 0;
+    border: 0;
+    border-bottom: 1px solid #bfb39f;
+    background: transparent;
+}
+
+.checkout-field input:focus,
+.checkout-field textarea:focus {
+    border-bottom-color: #1c1511;
+    box-shadow: 0 1px 0 #1c1511;
+}
+
+.checkout-field label {
+    color: #6f6456;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+.checkout-summary {
+    align-self: start;
+    position: sticky;
+    top: 104px;
+    background: #1c1511;
+    color: #f1e8da;
+}
+
+.checkout-summary h2,
+.checkout-summary h3,
+.checkout-summary strong,
+.checkout-summary span,
+.checkout-summary p {
+    color: #f1e8da;
+}
+
+.checkout-summary h2 {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 30px;
+    font-weight: 400;
+}
+
+.checkout-product-info p,
+.checkout-note {
+    color: rgba(241, 232, 218, 0.62);
+}
+
+.checkout-product-placeholder {
+    background: #3a2a20;
+    color: #b99a76;
+}
+
+.checkout-summary-row,
+.checkout-total {
+    border-color: rgba(241, 232, 218, 0.16);
+}
+
+.checkout-total strong {
+    color: #f1e8da;
+}
+
+/* ---------- order confirmation ---------- */
+
+.page-banner + .confirmation-page {
+    min-height: 0;
+    padding-top: 0;
+    padding-bottom: clamp(56px, 9vh, 110px);
+}
+
+.page-banner + .confirmation-page .confirmation-card {
+    position: relative;
+    margin-top: -48px;
+    padding-top: 36px;
+}
+
+.confirmation-card > :first-child {
+    margin-top: 0;
+}

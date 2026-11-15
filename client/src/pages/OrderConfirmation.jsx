@@ -1,5 +1,6 @@
 
 import { Link, useLocation, useParams } from "react-router-dom";
+import PageBanner from "../components/PageBanner";
 import "../styles/order-confirmation.css";
 
 function OrderConfirmation() {
@@ -31,18 +32,15 @@ function OrderConfirmation() {
     }
 
     return (
+        <>
+        <PageBanner
+            eyebrow="Thank you for choosing HAVEN"
+            title="Your order is placed."
+            text="Thank you for shopping with us. We’ll take it from here."
+            image="/media/haven-story.jpg"
+        />
         <main className="confirmation-page">
             <section className="confirmation-card">
-                <div className="confirmation-check">✓</div>
-
-                <p className="confirmation-eyebrow">THANK YOU FOR CHOOSING HAVEN</p>
-
-                <h1>Your order is placed.</h1>
-
-                <p className="confirmation-description">
-                    Thank you for shopping with us. We’ll take it from here.
-                </p>
-
                 <div className="confirmation-order-box">
                     <div>
                         <span>Order reference</span>
@@ -119,6 +117,7 @@ function OrderConfirmation() {
                 </Link>
             </section>
         </main>
+        </>
     );
 }
 

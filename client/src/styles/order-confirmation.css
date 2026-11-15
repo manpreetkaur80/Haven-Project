@@ -213,3 +213,18 @@ html:has(.confirmation-page) #root {
         font-size: 12px;
     }
 }
+
+/* fallback card (opened without order state) */
+.confirmation-card h1 {
+    font-family: "Cormorant Garamond", "Cormorant", Georgia, serif;
+}
+
+.confirmation-card > .confirmation-eyebrow + h1 + p,
+.confirmation-card > p {
+    line-height: 1.7;
+}
+
+.confirmation-card .checkout-button,
+.confirmation-card a.confirmation-button {
+    margin-top: 24px;
+}

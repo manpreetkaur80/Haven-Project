@@ -488,8 +488,9 @@ function Products({ category, title }) {
                                 <li key={sub.key}>
                                     <button
                                         type="button"
+                                        className={subcategory === sub.key ? "is-active" : ""}
                                         onClick={() => {
-                                            chooseSubcategory(sub.key);
+                                            chooseSubcategory(subcategory === sub.key ? "" : sub.key);
                                             document
                                                 .getElementById("shop")
                                                 ?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -521,24 +522,18 @@ function Products({ category, title }) {
 
             <main className="products-page" id="shop">
                 <div className="col-toolbar">
-                    <div className="col-chips" role="group" aria-label="Filter by type">
-                        <button
-                            type="button"
-                            className={!subcategory ? "is-active" : ""}
-                            onClick={() => chooseSubcategory("")}
-                        >
-                            All
-                        </button>
-                        {subcategories.map((sub) => (
+                    <div className="col-status">
+                        <span>{count}</span>
+                        {subcategory && (
                             <button
                                 type="button"
-                                key={sub.key}
-                                className={subcategory === sub.key ? "is-active" : ""}
-                                onClick={() => chooseSubcategory(sub.key)}
+                                className="col-active-filter"
+                                onClick={() => chooseSubcategory("")}
+                                aria-label={`Remove ${subcategory} filter`}
                             >
-                                {titleCase(sub.name)}
+                                {titleCase(subcategory)} <span aria-hidden="true">✕</span>
                             </button>
-                        ))}
+                        )}
                     </div>
 
                     <label className="col-sort">

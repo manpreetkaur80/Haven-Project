@@ -11,6 +11,7 @@ import {
     addMyAddress,
 } from "../services/api";
 
+import PageBanner from "../components/PageBanner";
 import "../styles/checkout.css";
 
 const emptyForm = {
@@ -309,21 +310,16 @@ function Checkout() {
     }
 
     return (
+        <>
+        <PageBanner
+            eyebrow="Almost yours"
+            title="Checkout"
+            text={loadingProfile ? "Loading your saved details…" : "Where should we deliver your pieces?"}
+            meta="Secure checkout"
+            image="/media/haven-story.jpg"
+        />
         <main className="checkout-page">
             <div className="checkout-container">
-                <header className="checkout-header">
-                    <Link to="/" className="checkout-logo">
-                        HAVEN
-                    </Link>
-                    <p>SECURE CHECKOUT</p>
-                </header>
-
-                <div className="checkout-title">
-                    <p className="checkout-eyebrow">ALMOST YOURS</p>
-                    <h1>Checkout</h1>
-                    <p>Where should we deliver your pieces?</p>
-                    {loadingProfile && <p>Loading your saved details…</p>}
-                </div>
 
                 <div className="checkout-layout">
                     <form
@@ -607,6 +603,7 @@ function Checkout() {
                 </div>
             </div>
         </main>
+        </>
     );
 }
 
