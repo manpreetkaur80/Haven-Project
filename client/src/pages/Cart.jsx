@@ -1,6 +1,7 @@
 
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import PageBanner from "../components/PageBanner";
 import "../styles/cart.css";
 
 function Cart() {
@@ -42,20 +43,16 @@ function Cart() {
     }
 
     return (
+        <>
+        <PageBanner
+            eyebrow="Your HAVEN bag"
+            title="Shopping bag"
+            meta={`${cartCount} ${cartCount === 1 ? "item" : "items"}`}
+            image="/media/haven-story.jpg"
+        />
         <main className="cart-page">
             <div className="cart-container">
 
-                {/* Cart heading */}
-                <div className="cart-heading">
-                    <div>
-                        <p className="cart-eyebrow">YOUR HAVEN BAG</p>
-                        <h1>Shopping Bag</h1>
-                    </div>
-
-                    <p className="cart-item-count">
-                        {cartCount} {cartCount === 1 ? "item" : "items"}
-                    </p>
-                </div>
 
                 <div className="cart-layout">
 
@@ -194,6 +191,7 @@ function Cart() {
                 </div>
             </div>
         </main>
+        </>
     );
 }
 

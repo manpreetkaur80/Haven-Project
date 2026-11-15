@@ -1,6 +1,7 @@
 
 import { Link } from "react-router-dom";
 import { useWishlist } from "../context/WishlistContext";
+import PageBanner from "../components/PageBanner";
 import "../styles/wishlist.css";
 
 function Wishlist() {
@@ -28,15 +29,14 @@ function Wishlist() {
     }
 
     return (
+        <>
+        <PageBanner
+            eyebrow="Your personal edit"
+            title="Wishlist"
+            meta={`${wishlistItems.length} ${wishlistItems.length === 1 ? "item" : "items"} saved`}
+            image="/media/haven-look.jpg"
+        />
         <main className="wishlist-page">
-            <header className="wishlist-heading">
-                <p className="wishlist-eyebrow">YOUR PERSONAL EDIT</p>
-                <h1>Wishlist</h1>
-                <p>
-                    {wishlistItems.length}{" "}
-                    {wishlistItems.length === 1 ? "item" : "items"} saved
-                </p>
-            </header>
 
             {error && (
                 <p className="wishlist-error" role="alert">
@@ -107,6 +107,7 @@ function Wishlist() {
                 </div>
             )}
         </main>
+        </>
     );
 }
 

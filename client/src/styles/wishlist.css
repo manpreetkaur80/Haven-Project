@@ -196,3 +196,18 @@ html:has(.wishlist-page) #root {
         gap: 28px 12px;
     }
 }
+
+.page-banner + .wishlist-page { padding-top: clamp(32px, 5vh, 56px); }
+
+.wishlist-image-link,
+.wishlist-image-link:hover {
+    color: inherit;
+    text-decoration: none;
+}
+
+.wishlist-no-image {
+    color: #8a7d6c;
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 20px;
+    letter-spacing: 0.04em;
+}

@@ -477,10 +477,9 @@ export function getMyWishlist(token) {
 }
 
 export function addWishlistItem(token, productId) {
-    return apiRequest(`${API_URL}/wishlist`, {
+    return apiRequest(`${API_URL}/wishlist/${productId}`, {
         method: "POST",
-        headers: jsonHeaders(token),
-        body: JSON.stringify({ productId }),
+        headers: authHeaders(token),
     });
 }
 

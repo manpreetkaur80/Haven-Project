@@ -17,7 +17,13 @@ function ProductReviews({ productId }) {
 
     const load = useCallback(() => {
         getProductReviews(productId)
-            .then((result) => setData(result))
+            .then((result) =>
+                setData({
+                    count: Number(result?.count) || 0,
+                    average: Number(result?.average) || 0,
+                    reviews: Array.isArray(result?.reviews) ? result.reviews : [],
+                })
+            )
             .catch(() => {});
     }, [productId]);
 

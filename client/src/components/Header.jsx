@@ -60,6 +60,8 @@ const NAV_LINKS = [
     { to: "/products", label: "Collections" },
 ];
 
+const HERO_PATHS = ["/", "/products", "/female", "/male", "/new-arrivals"];
+
 const POPULAR_SEARCHES = ["Linen shirts", "Knitwear", "Denim", "Outerwear"];
 
 function Header() {
@@ -69,7 +71,8 @@ function Header() {
     const { pathname } = useLocation();
     const navigate = useNavigate();
 
-    const isHome = pathname === "/";
+    /* Pages that open with a full-screen hero get a transparent header. */
+    const isHome = HERO_PATHS.includes(pathname);
 
     const [scrolled, setScrolled] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
@@ -97,7 +100,8 @@ function Header() {
 
         const update = () => {
             frame = 0;
-            const threshold = Math.max(window.innerHeight - 96, 200);
+            const threshold =
+                pathname === "/" ? Math.max(window.innerHeight - 96, 200) : 80;
             setScrolled(window.scrollY > threshold);
         };
 
@@ -118,7 +122,7 @@ function Header() {
                 window.cancelAnimationFrame(frame);
             }
         };
-    }, [isHome]);
+    }, [isHome, pathname]);
 
     /* Close any open panel when the route changes. */
     useEffect(() => {

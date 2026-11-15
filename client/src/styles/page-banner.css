@@ -1,0 +1,74 @@
+/* HAVEN — inner page banner */
+.page-banner {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    width: 100%;
+    min-height: clamp(240px, 40svh, 400px);
+    box-sizing: border-box;
+    padding: clamp(48px, 8vh, 96px) clamp(20px, 4.5vw, 72px) clamp(32px, 5vh, 56px);
+    background:
+        linear-gradient(180deg, rgba(26, 23, 19, 0.35) 0%, rgba(26, 23, 19, 0.82) 100%),
+        var(--banner-image) center / cover no-repeat,
+        #2a2723;
+    color: #f7f3ec;
+    text-align: left;
+    overflow: hidden;
+}
+
+.page-banner-inner {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+}
+
+.page-banner-eyebrow {
+    margin: 0 0 16px;
+    color: #cdbfa8;
+    font-family: "Inter", system-ui, sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+}
+
+.page-banner h1 {
+    margin: 0;
+    color: #f7f3ec;
+    font-family: "Cormorant Garamond", "Cormorant", Georgia, serif;
+    font-size: clamp(44px, 7vw, 100px);
+    font-weight: 400;
+    letter-spacing: -0.015em;
+    line-height: 0.98;
+}
+
+.page-banner-text {
+    max-width: 520px;
+    margin: 18px 0 0;
+    color: #e6ddcd;
+    font-family: "Inter", system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.page-banner-meta {
+    margin: 0;
+    padding-bottom: 8px;
+    color: #cdbfa8;
+    font-family: "Inter", system-ui, sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+@media (max-width: 700px) {
+    .page-banner-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+    }
+}

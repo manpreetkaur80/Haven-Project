@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
+import PageBanner from "../components/PageBanner";
 import "../styles/profile.css";
 import {
     getMyProfile,
@@ -236,19 +237,14 @@ const [returnSubmitting, setReturnSubmitting] = useState(false);
   }
 
   return (
+    <>
+    <PageBanner
+      eyebrow="Your HAVEN"
+      title="My account"
+      text="Your details, your addresses, your orders — all in one place."
+      image="/media/haven-story.jpg"
+    />
     <main className="profile-page">
-      <header className="profile-heading">
-        <div>
-          <p className="profile-eyebrow">YOUR HAVEN</p>
-          <h1>My account</h1>
-          <p className="profile-intro">
-            Your details, your addresses, your orders — all in one place.
-          </p>
-        </div>
-        <Link className="profile-shop-link" to="/products">
-          Continue shopping →
-        </Link>
-      </header>
 
       <div className="profile-layout">
         <aside className="profile-sidebar">
@@ -581,6 +577,7 @@ const [returnSubmitting, setReturnSubmitting] = useState(false);
         </section>
       </div>
     </main>
+    </>
   );
 }
 

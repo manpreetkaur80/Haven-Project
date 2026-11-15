@@ -1,5 +1,5 @@
 
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useLocation, BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Checkout from "./pages/Checkout";
 import Products from "./pages/Products";
@@ -13,6 +13,7 @@ import Wishlist from "./pages/Wishlist";
 import AdminOrders from "./admin/AdminOrders";
 import AdminLayout from "./components/AdminLayout";
 import Header from "./components/Header";
+import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import AddProduct from "./admin/AddProduct";
 import AdminProducts from "./admin/AdminProducts";
@@ -33,10 +34,13 @@ function ComingSoon({ title }) {
 }
 
 function CustomerLayout({ children }) {
+    const { pathname } = useLocation();
+
     return (
         <>
             <Header />
             {children}
+            {pathname !== "/" && <Footer />}
         </>
     );
 }

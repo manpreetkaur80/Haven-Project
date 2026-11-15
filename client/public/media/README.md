@@ -28,3 +28,17 @@ Replace it with an editorial photograph, keeping the name.
 
 `haven-look.jpg` (4:5, ~1080x1350) is the lookbook photo beside the three listed products.
 Replace it with a photograph of an outfit made from products you sell, keeping the name.
+
+
+## Shop pages (Collection / Women / Men / New arrivals)
+
+Each page has a full-screen hero. Replace these files (same names) with your own:
+
+| Page | Video (optional) | Poster / still image |
+|---|---|---|
+| /products | haven-collection.mp4 | haven-collection-poster.jpg |
+| /female | haven-women.mp4 | haven-women-poster.jpg |
+| /male | haven-men.mp4 | haven-men-poster.jpg |
+| /new-arrivals | haven-newarrivals.mp4 | haven-newarrivals-poster.jpg |
+
+Landscape 1920x1080, H.264, muted, 6-15 MB. For a photo-only hero, replace the poster and delete the .mp4.

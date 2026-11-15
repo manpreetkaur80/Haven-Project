@@ -260,3 +260,6 @@ html.is-wide #root {
         transition: none;
     }
 }
+
+/* Banner supplies the page title */
+.products-page { padding-top: 0; }
