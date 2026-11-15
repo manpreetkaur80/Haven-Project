@@ -1,4 +1,5 @@
 
+import { useEffect } from "react";
 import { useLocation, BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Checkout from "./pages/Checkout";
@@ -15,6 +16,7 @@ import AdminLayout from "./components/AdminLayout";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
+import NotFound from "./pages/NotFound";
 import AddProduct from "./admin/AddProduct";
 import AdminProducts from "./admin/AdminProducts";
 import AdminDashboard from "./admin/AdminDashboard";
@@ -24,17 +26,44 @@ import { WishlistProvider } from "./context/WishlistContext";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
-function ComingSoon({ title }) {
-    return (
-        <main style={{ padding: "40px" }}>
-            <h1>{title}</h1>
-            <p>This HAVEN page is coming soon.</p>
-        </main>
-    );
+const PAGE_TITLES = {
+    "/": "HAVEN — Everyday, in your element",
+    "/products": "Collection",
+    "/female": "Women",
+    "/male": "Men",
+    "/new-arrivals": "New arrivals",
+    "/wishlist": "Wishlist",
+    "/cart": "Shopping bag",
+    "/checkout": "Checkout",
+    "/login": "Log in",
+    "/signup": "Create account",
+    "/profile": "My account",
+};
+
+/* Sets the browser-tab title for each page. */
+function useDocumentTitle() {
+    const { pathname } = useLocation();
+
+    /* Every new page opens at the top (React Router keeps the old scroll). */
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [pathname]);
+
+    useEffect(() => {
+        let title = PAGE_TITLES[pathname];
+        if (!title) {
+            if (pathname.startsWith("/admin")) title = "Admin";
+            else if (pathname.startsWith("/products/")) title = "Product";
+            else if (pathname.startsWith("/order-confirmation")) title = "Order placed";
+            else title = "Page not found";
+        }
+        document.title = pathname === "/" ? title : `${title} — HAVEN`;
+    }, [pathname]);
 }
 
 function CustomerLayout({ children }) {
     const { pathname } = useLocation();
+    useDocumentTitle();
 
     return (
         <>
@@ -229,7 +258,7 @@ function App() {
                                 path="*"
                                 element={
                                     <CustomerLayout>
-                                        <ComingSoon title="Page Not Found" />
+                                        <NotFound />
                                     </CustomerLayout>
                                 }
                             />

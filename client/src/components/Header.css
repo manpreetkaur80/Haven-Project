@@ -495,3 +495,14 @@
         animation-duration: 0.01ms !important;
     }
 }
+
+/* Keep the wordmark and links legible over bright photography / video. */
+.haven-header.is-clear .haven-logo,
+.haven-header.is-clear .haven-links a,
+.haven-header.is-clear .haven-icon-btn {
+    text-shadow: 0 1px 14px rgba(28, 21, 17, 0.45);
+}
+
+.haven-header.is-clear .haven-icon-btn svg {
+    filter: drop-shadow(0 1px 8px rgba(28, 21, 17, 0.45));
+}

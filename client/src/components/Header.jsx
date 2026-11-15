@@ -55,6 +55,7 @@ const CloseIcon = () => (
 );
 
 const NAV_LINKS = [
+    { to: "/", label: "Home" },
     { to: "/female", label: "Women" },
     { to: "/male", label: "Men" },
     { to: "/products", label: "Collections" },
