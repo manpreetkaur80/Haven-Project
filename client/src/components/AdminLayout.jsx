@@ -19,8 +19,10 @@ function AdminLayout({ children }) {
                 </Link>
 
                 <nav className="admin-nav" aria-label="Admin">
+                    
                     {ADMIN_LINKS.map((link) => (
-                        <NavLink key={link.to} to={link.to} end={link.end}>
+                    
+                    <NavLink key={link.to} to={link.to} end={link.end}>
                             {link.label}
                         </NavLink>
                     ))}
