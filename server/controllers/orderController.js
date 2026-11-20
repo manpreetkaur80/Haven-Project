@@ -2,9 +2,11 @@
 const mongoose = require("mongoose");
 const Product = require("../models/Product");
 const Order = require("../models/Order");
+const Coupon = require("../models/Coupon");
+const { evaluateCoupon } = require("../utils/coupons");
 
 const createOrder = async (req, res) => {
-  const { customer, shippingAddress, items, paymentMethod } = req.body;
+  const { customer, shippingAddress, items, paymentMethod, couponCode } = req.body;
 
   // Authentication middleware must set req.user.
   if (!req.user?.userId) {
@@ -180,6 +182,42 @@ const createOrder = async (req, res) => {
 
       const shippingFee = 0;
 
+      // Discount code: re-checked here so the browser cannot fake a discount.
+      let discountAmount = 0;
+      let appliedCode = "";
+
+      if (couponCode && String(couponCode).trim()) {
+        const { coupon, discountAmount: amount } = await evaluateCoupon(
+          couponCode,
+          subtotal,
+          session
+        );
+
+        // Atomically use up one redemption (respects the usage limit).
+        const redeemed = await Coupon.updateOne(
+          {
+            _id: coupon._id,
+            isActive: true,
+            $or: [
+              { usageLimit: 0 },
+              { $expr: { $lt: ["$usedCount", "$usageLimit"] } },
+            ],
+          },
+          { $inc: { usedCount: 1 } },
+          { session }
+        );
+
+        if (redeemed.modifiedCount !== 1) {
+          throw Object.assign(
+            new Error("This discount code has been fully used."),
+            { statusCode: 400 }
+          );
+        }
+
+        discountAmount = amount;
+        appliedCode = coupon.code;
+      }
+
       const [order] = await Order.create(
         [
           {
@@ -203,7 +241,9 @@ const createOrder = async (req, res) => {
             items: orderItems,
             subtotal,
             shippingFee,
-            totalAmount: subtotal + shippingFee,
+            couponCode: appliedCode,
+            discountAmount,
+            totalAmount: subtotal - discountAmount + shippingFee,
             paymentMethod: "COD",
             paymentStatus: "Pending",
             orderStatus: "Placed",
@@ -224,6 +264,8 @@ const createOrder = async (req, res) => {
         items: savedOrder.items,
         subtotal: savedOrder.subtotal,
         shippingFee: savedOrder.shippingFee,
+        couponCode: savedOrder.couponCode,
+        discountAmount: savedOrder.discountAmount,
         totalAmount: savedOrder.totalAmount,
         paymentMethod: savedOrder.paymentMethod,
         paymentStatus: savedOrder.paymentStatus,

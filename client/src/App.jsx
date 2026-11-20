@@ -20,6 +20,8 @@ import NotFound from "./pages/NotFound";
 import AddProduct from "./admin/AddProduct";
 import AdminProducts from "./admin/AdminProducts";
 import AdminDashboard from "./admin/AdminDashboard";
+import AdminCoupons from "./admin/AdminCoupons";
+import Orders from "./pages/Orders";
 import { CartProvider } from "./context/CartContext";
 import { AuthProvider } from "./context/AuthContext";
 import { WishlistProvider } from "./context/WishlistContext";
@@ -38,6 +40,7 @@ const PAGE_TITLES = {
     "/login": "Log in",
     "/signup": "Create account",
     "/profile": "My account",
+    "/orders": "My orders",
 };
 
 /* Sets the browser-tab title for each page. */
@@ -55,6 +58,7 @@ function useDocumentTitle() {
             if (pathname.startsWith("/admin")) title = "Admin";
             else if (pathname.startsWith("/products/")) title = "Product";
             else if (pathname.startsWith("/order-confirmation")) title = "Order placed";
+            else if (pathname.startsWith("/orders/")) title = "Track order";
             else title = "Page not found";
         }
         document.title = pathname === "/" ? title : `${title} — HAVEN`;
@@ -177,6 +181,27 @@ function App() {
                                 }
                             />
 
+                            <Route
+                                path="/orders"
+                                element={
+                                    <CustomerLayout>
+                                        <ProtectedRoute>
+                                            <Orders />
+                                        </ProtectedRoute>
+                                    </CustomerLayout>
+                                }
+                            />
+                            <Route
+                                path="/orders/:id"
+                                element={
+                                    <CustomerLayout>
+                                        <ProtectedRoute>
+                                            <Orders />
+                                        </ProtectedRoute>
+                                    </CustomerLayout>
+                                }
+                            />
+
                             {/* Cart and checkout */}
                             <Route
                                 path="/cart"
@@ -249,6 +274,17 @@ function App() {
                                         <AdminLayout>
 <AddProduct />
 </AdminLayout>
+                                    </ProtectedRoute>
+                                }
+                            />
+
+                            <Route
+                                path="/admin/coupons"
+                                element={
+                                    <ProtectedRoute adminOnly>
+                                        <AdminLayout>
+                                            <AdminCoupons />
+                                        </AdminLayout>
                                     </ProtectedRoute>
                                 }
                             />

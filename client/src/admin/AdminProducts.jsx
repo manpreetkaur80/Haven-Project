@@ -1,3 +1,5 @@
+import ImageDropzone from "../components/ImageDropzone";
+import TagInput from "../components/TagInput";
 import "../styles/admin.css";
 
 import { useEffect, useState } from "react";
@@ -36,7 +38,6 @@ function AdminProducts() {
     const [editingProduct, setEditingProduct] = useState(null);
     const [formData, setFormData] = useState(emptyForm);
     const [images, setImages] = useState([]);
-    const [previews, setPreviews] = useState([]);
 
     const fetchProducts = async () => {
         if (!token) return;
@@ -67,16 +68,6 @@ function AdminProducts() {
         }
     }, [authLoading, token, user]);
 
-    // Create and clean up local image previews
-    useEffect(() => {
-        const urls = images.map((file) => URL.createObjectURL(file));
-        setPreviews(urls);
-
-        return () => {
-            urls.forEach((url) => URL.revokeObjectURL(url));
-        };
-    }, [images]);
-
     const handleFormChange = (e) => {
         const { name, value, type, checked } = e.target;
 
@@ -84,41 +75,6 @@ function AdminProducts() {
             ...previous,
             [name]: type === "checkbox" ? checked : value
         }));
-    };
-
-    const handleImageChange = (e) => {
-        const selectedFiles = Array.from(e.target.files || []);
-
-        setError("");
-        setImages([]);
-
-        if (selectedFiles.length > 5) {
-            setError("Please select a maximum of 5 additional images.");
-            e.target.value = "";
-            return;
-        }
-
-        const invalidFile = selectedFiles.find(
-            (file) => !file.type.startsWith("image/")
-        );
-
-        if (invalidFile) {
-            setError("Please select image files only.");
-            e.target.value = "";
-            return;
-        }
-
-        const oversizedFile = selectedFiles.find(
-            (file) => file.size > 5 * 1024 * 1024
-        );
-
-        if (oversizedFile) {
-            setError("Each image must be 5 MB or smaller.");
-            e.target.value = "";
-            return;
-        }
-
-        setImages(selectedFiles);
     };
 
     const openEditForm = (product) => {
@@ -373,25 +329,27 @@ function AdminProducts() {
 
                             <div className="admin-form-field">
                                 <label htmlFor="edit-sizes">Sizes</label>
-                                <input
+                                <TagInput
                                     id="edit-sizes"
-                                    name="sizes"
                                     value={formData.sizes}
-                                    onChange={handleFormChange}
-                                    placeholder="S, M, L, XL"
-                                    required
+                                    onChange={(value) =>
+                                        setFormData((p) => ({ ...p, sizes: value }))
+                                    }
+                                    placeholder="Type a size and press Enter"
+                                    suggestions={["XS", "S", "M", "L", "XL", "XXL"]}
                                 />
                             </div>
 
                             <div className="admin-form-field">
                                 <label htmlFor="edit-colors">Colors</label>
-                                <input
+                                <TagInput
                                     id="edit-colors"
-                                    name="colors"
                                     value={formData.colors}
-                                    onChange={handleFormChange}
-                                    placeholder="White, Black, Beige"
-                                    required
+                                    onChange={(value) =>
+                                        setFormData((p) => ({ ...p, colors: value }))
+                                    }
+                                    placeholder="Type a colour and press Enter"
+                                    suggestions={["Black", "White", "Beige", "Navy", "Brown", "Olive"]}
                                 />
                             </div>
                         </div>
@@ -424,32 +382,12 @@ function AdminProducts() {
                             <p>Existing images are retained when you save changes.</p>
                         </div>
 
-                        <div className="admin-form-field">
-                            <label htmlFor="edit-images">Add More Images</label>
-                            <input
-                                id="edit-images"
-                                type="file"
-                                accept="image/*"
-                                multiple
-                                onChange={handleImageChange}
-                            />
-                            <small>
-                                Select up to 5 additional images. Each image must
-                                be 5 MB or smaller.
-                            </small>
-                        </div>
-
-                        {previews.length > 0 && (
-                            <div className="admin-image-grid">
-                                {previews.map((preview, index) => (
-                                    <img
-                                        key={preview}
-                                        src={preview}
-                                        alt={`New image preview ${index + 1}`}
-                                    />
-                                ))}
-                            </div>
-                        )}
+                        <ImageDropzone
+                            label="Add more images"
+                            files={images}
+                            onChange={setImages}
+                            onError={setError}
+                        />
 
                         <div className="admin-checkboxes">
                             <label>

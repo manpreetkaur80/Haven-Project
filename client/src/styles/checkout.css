@@ -414,3 +414,105 @@ html:has(.checkout-page) #root {
 .confirmation-card > :first-child {
     margin-top: 0;
 }
+
+/* ---------- discount code ---------- */
+
+.checkout-coupon {
+    margin: 18px 0 4px;
+}
+
+.checkout-coupon-form {
+    display: flex;
+    gap: 0;
+}
+
+.checkout-coupon-form input {
+    box-sizing: border-box;
+    flex: 1;
+    min-width: 0;
+    height: 44px;
+    padding: 0 14px;
+    border: 1px solid rgba(241, 232, 218, 0.3);
+    border-right: 0;
+    border-radius: 0;
+    background: transparent;
+    color: #f1e8da;
+    font: inherit;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.checkout-coupon-form input::placeholder {
+    color: rgba(241, 232, 218, 0.5);
+    text-transform: none;
+    letter-spacing: 0.04em;
+}
+
+.checkout-coupon-form input:focus {
+    outline: none;
+    border-color: #b99a76;
+}
+
+.checkout-coupon-form button {
+    height: 44px;
+    padding: 0 20px;
+    border: 1px solid #f1e8da;
+    border-radius: 0;
+    background: #f1e8da;
+    color: #1c1511;
+    font: inherit;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.checkout-coupon-form button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.checkout-coupon-applied {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    border: 1px solid #b99a76;
+    color: #f1e8da;
+    font-size: 13px;
+}
+
+.checkout-coupon-applied b {
+    letter-spacing: 0.1em;
+}
+
+.checkout-coupon-applied button {
+    border: 0;
+    background: none;
+    color: #b99a76;
+    font: inherit;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.checkout-coupon-error {
+    margin: 8px 0 0;
+    color: #e0a898;
+    font-size: 13px;
+}
+
+.checkout-discount-row span:last-child {
+    color: #b99a76;
+}
+
+.confirmation-discount {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0 0;
+    color: #6f6456;
+    font-size: 14px;
+}

@@ -117,6 +117,20 @@ const orderSchema = new mongoose.Schema(
             min: 0,
         },
 
+        // Discount code applied at checkout (validated again on the server).
+        couponCode: {
+            type: String,
+            default: "",
+            trim: true,
+            uppercase: true,
+        },
+
+        discountAmount: {
+            type: Number,
+            default: 0,
+            min: 0,
+        },
+
         totalAmount: {
             type: Number,
             required: true,

@@ -95,6 +95,15 @@ function OrderConfirmation() {
                     ))}
                 </div>
 
+                {Number(order.discountAmount) > 0 && (
+                    <div className="confirmation-discount">
+                        <span>Discount{order.couponCode ? ` (${order.couponCode})` : ""}</span>
+                        <span>
+                            − ₹{Number(order.discountAmount).toLocaleString("en-IN")}
+                        </span>
+                    </div>
+                )}
+
                 <div className="confirmation-total">
                     <span>Total amount</span>
                     <strong>
@@ -110,6 +119,10 @@ function OrderConfirmation() {
 
                 <Link to="/products" className="confirmation-button">
                     Continue Shopping
+                </Link>
+
+                <Link to={`/orders/${order._id || id}`} className="confirmation-home-link">
+                    Track this order
                 </Link>
 
                 <Link to="/" className="confirmation-home-link">

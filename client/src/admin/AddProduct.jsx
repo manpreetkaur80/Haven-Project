@@ -1,8 +1,13 @@
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import ImageDropzone from "../components/ImageDropzone";
+import TagInput from "../components/TagInput";
 import "../styles/admin.css";
+
+const SIZE_SUGGESTIONS = ["XS", "S", "M", "L", "XL", "XXL"];
+const COLOR_SUGGESTIONS = ["Black", "White", "Beige", "Navy", "Brown", "Olive"];
 
 const initialFormData = {
     name: "",
@@ -21,19 +26,9 @@ function AddProduct() {
 
     const [formData, setFormData] = useState(initialFormData);
     const [images, setImages] = useState([]);
-    const [previews, setPreviews] = useState([]);
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
-
-    useEffect(() => {
-        const urls = images.map((image) => URL.createObjectURL(image));
-        setPreviews(urls);
-
-        return () => {
-            urls.forEach((url) => URL.revokeObjectURL(url));
-        };
-    }, [images]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -42,44 +37,6 @@ function AddProduct() {
             ...previous,
             [name]: value
         }));
-    };
-
-    const handleImageChange = (e) => {
-        const selectedFiles = Array.from(e.target.files || []);
-
-        setError("");
-        setMessage("");
-
-        if (selectedFiles.length > 5) {
-            setImages([]);
-            setError("Please select a maximum of 5 images.");
-            e.target.value = "";
-            return;
-        }
-
-        const invalidFile = selectedFiles.find(
-            (file) => !file.type.startsWith("image/")
-        );
-
-        if (invalidFile) {
-            setImages([]);
-            setError("Please select image files only.");
-            e.target.value = "";
-            return;
-        }
-
-        const oversizedFile = selectedFiles.find(
-            (file) => file.size > 5 * 1024 * 1024
-        );
-
-        if (oversizedFile) {
-            setImages([]);
-            setError("Each image must be 5 MB or smaller.");
-            e.target.value = "";
-            return;
-        }
-
-        setImages(selectedFiles);
     };
 
     const handleSubmit = async (e) => {
@@ -111,6 +68,12 @@ function AddProduct() {
             stock < 0
         ) {
             setError("Enter a valid price and a whole-number stock quantity.");
+            setLoading(false);
+            return;
+        }
+
+        if (!formData.sizes.trim() || !formData.colors.trim()) {
+            setError("Add at least one size and one colour.");
             setLoading(false);
             return;
         }
@@ -169,11 +132,6 @@ function AddProduct() {
             setFormData({ ...initialFormData });
             setImages([]);
 
-            const fileInput = document.getElementById("images");
-
-            if (fileInput) {
-                fileInput.value = "";
-            }
         } catch (err) {
             setError(
                 err.message ||
@@ -282,23 +240,25 @@ function AddProduct() {
                 />
 
                 <label htmlFor="sizes">Sizes</label>
-                <input
+                <TagInput
                     id="sizes"
-                    name="sizes"
                     value={formData.sizes}
-                    onChange={handleChange}
-                    placeholder="S, M, L, XL"
-                    required
+                    onChange={(value) =>
+                        setFormData((previous) => ({ ...previous, sizes: value }))
+                    }
+                    placeholder="Type a size and press Enter"
+                    suggestions={SIZE_SUGGESTIONS}
                 />
 
-                <label htmlFor="colors">Colors</label>
-                <input
+                <label htmlFor="colors">Colours</label>
+                <TagInput
                     id="colors"
-                    name="colors"
                     value={formData.colors}
-                    onChange={handleChange}
-                    placeholder="White, Black, Beige"
-                    required
+                    onChange={(value) =>
+                        setFormData((previous) => ({ ...previous, colors: value }))
+                    }
+                    placeholder="Type a colour and press Enter"
+                    suggestions={COLOR_SUGGESTIONS}
                 />
 
                 <label htmlFor="stock">Stock Quantity</label>
@@ -313,32 +273,12 @@ function AddProduct() {
                     required
                 />
 
-                <label htmlFor="images">Product Images</label>
-                <input
-                    id="images"
-                    name="images"
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    onChange={handleImageChange}
+                <ImageDropzone
+                    label="Product images — the first one is the main photo"
+                    files={images}
+                    onChange={setImages}
+                    onError={setError}
                 />
-
-                <p className="image-field-help">
-                    Select up to 5 images. Each image must be 5 MB or smaller.
-                </p>
-
-                {previews.length > 0 && (
-                    <div className="image-preview-grid">
-                        {previews.map((preview, index) => (
-                            <img
-                                key={preview}
-                                src={preview}
-                                alt={`Product preview ${index + 1}`}
-                                className="product-image-preview"
-                            />
-                        ))}
-                    </div>
-                )}
 
                 <button type="submit" className="admin-btn" disabled={loading}>
                     {loading ? "Uploading Product..." : "Save Product"}

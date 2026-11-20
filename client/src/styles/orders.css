@@ -1,0 +1,337 @@
+html:has(.orders-page) #root {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    border-inline: 0;
+    text-align: left;
+    background: #f7f3ec;
+}
+
+.orders-page {
+    box-sizing: border-box;
+    width: min(1100px, 100%);
+    margin: 0 auto;
+    padding: clamp(36px, 6vw, 72px) clamp(16px, 4vw, 40px) clamp(64px, 9vw, 110px);
+    color: #2a2723;
+}
+
+.ord-empty {
+    padding: 70px 0;
+    text-align: center;
+    color: #6f6456;
+}
+
+.ord-error {
+    color: #7a3b2e;
+}
+
+.ord-btn {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 14px 30px;
+    background: #1c1511;
+    color: #f1e8da;
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+.ord-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 22px;
+}
+
+.ord-card {
+    position: relative;
+    display: grid;
+    gap: 14px;
+    padding: 26px;
+    border: 1px solid #ddd4c4;
+    background: #fffdf9;
+    color: inherit;
+    text-decoration: none;
+    transition: border-color 0.25s ease, transform 0.25s ease;
+}
+
+.ord-card:hover {
+    border-color: #1c1511;
+    transform: translateY(-2px);
+}
+
+.ord-card-top,
+.ord-card-foot,
+.ord-detail-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.ord-label {
+    margin: 0 0 4px;
+    color: #8a7d6c;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+}
+
+.ord-date {
+    margin: 0;
+    color: #6f6456;
+    font-size: 14px;
+}
+
+.ord-status {
+    padding: 5px 12px;
+    background: #3a2a20;
+    color: #f1e8da;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.ord-thumbs {
+    display: flex;
+    gap: 8px;
+}
+
+.ord-thumbs img,
+.ord-thumbs .ord-item-ph {
+    width: 54px;
+    height: 68px;
+    object-fit: cover;
+}
+
+.ord-item-ph {
+    display: grid;
+    place-items: center;
+    background: #3a2a20;
+    color: #b99a76;
+    font-family: "Cormorant Garamond", serif;
+    font-size: 20px;
+}
+
+.ord-card-foot {
+    padding-top: 14px;
+    border-top: 1px solid #ebe4d8;
+    align-items: center;
+    font-size: 14px;
+}
+
+.ord-track {
+    color: #8a7d6c;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+/* detail */
+
+.ord-back {
+    display: inline-block;
+    margin-bottom: 26px;
+    color: #6f6456;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+.ord-detail-head h2 {
+    margin: 0 0 6px;
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(32px, 5vw, 46px);
+    font-weight: 500;
+    color: #1c1511;
+}
+
+.ord-timeline {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    margin: 44px 0 50px;
+    padding: 0;
+    list-style: none;
+}
+
+.ord-timeline li {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    gap: 12px;
+    text-align: center;
+    color: #8a7d6c;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+}
+
+.ord-timeline li::before {
+    content: "";
+    position: absolute;
+    top: 7px;
+    right: 50%;
+    width: 100%;
+    height: 1px;
+    background: #ddd4c4;
+}
+
+.ord-timeline li:first-child::before {
+    display: none;
+}
+
+.ord-dot {
+    position: relative;
+    z-index: 1;
+    width: 15px;
+    height: 15px;
+    border: 1px solid #ddd4c4;
+    border-radius: 50%;
+    background: #f7f3ec;
+}
+
+.ord-timeline li.done,
+.ord-timeline li.current {
+    color: #1c1511;
+}
+
+.ord-timeline li.done::before,
+.ord-timeline li.current::before {
+    background: #3a2a20;
+}
+
+.ord-timeline li.done .ord-dot {
+    border-color: #3a2a20;
+    background: #3a2a20;
+}
+
+.ord-timeline li.current .ord-dot {
+    border-color: #3a2a20;
+    background: #b99a76;
+    box-shadow: 0 0 0 5px rgba(185, 154, 118, 0.3);
+}
+
+.ord-timeline li.current .ord-step-label {
+    font-weight: 600;
+}
+
+.ord-special {
+    margin: 34px 0 44px;
+    padding: 22px 26px;
+    border-left: 3px solid #3a2a20;
+    background: #ebe4d8;
+}
+
+.ord-special-bad {
+    border-left-color: #7a3b2e;
+}
+
+.ord-special p {
+    margin: 6px 0 0;
+    color: #4a443c;
+}
+
+.ord-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 44px;
+}
+
+.ord-grid h3 {
+    margin: 0 0 16px;
+    font-family: "Cormorant Garamond", serif;
+    font-size: 26px;
+    font-weight: 500;
+    color: #1c1511;
+}
+
+.ord-grid section + section h3:not(:first-child) {
+    margin-top: 32px;
+}
+
+.ord-item {
+    display: grid;
+    grid-template-columns: 64px 1fr auto;
+    gap: 16px;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid #ebe4d8;
+    font-size: 14px;
+}
+
+.ord-item img,
+.ord-item .ord-item-ph {
+    width: 64px;
+    height: 80px;
+    object-fit: cover;
+}
+
+.ord-item p {
+    margin: 4px 0 0;
+    color: #6f6456;
+}
+
+.ord-addr {
+    margin: 0;
+    color: #4a443c;
+    line-height: 1.7;
+}
+
+.ord-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    color: #4a443c;
+    font-size: 14px;
+}
+
+.ord-total {
+    margin-top: 6px;
+    padding-top: 14px;
+    border-top: 1px solid #ddd4c4;
+    color: #1c1511;
+}
+
+.ord-help {
+    margin: 44px 0 0;
+    color: #6f6456;
+    font-size: 14px;
+}
+
+.ord-help a {
+    color: #1c1511;
+}
+
+@media (max-width: 760px) {
+    .ord-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    /* timeline turns vertical on phones */
+    .ord-timeline {
+        grid-template-columns: 1fr;
+        gap: 22px;
+        margin: 32px 0 38px;
+    }
+
+    .ord-timeline li {
+        grid-auto-flow: column;
+        justify-content: start;
+        justify-items: start;
+        align-items: center;
+        gap: 16px;
+        text-align: left;
+        font-size: 14px;
+    }
+
+    .ord-timeline li::before {
+        top: auto;
+        bottom: 100%;
+        right: auto;
+        left: 7px;
+        width: 1px;
+        height: 22px;
+    }
+}

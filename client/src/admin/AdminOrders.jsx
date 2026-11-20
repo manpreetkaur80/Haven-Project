@@ -357,6 +357,13 @@ const handleMarkRefunded = async () => {
 
                     <h3>Payment Summary</h3>
                     <p>Subtotal: {formatCurrency(selectedOrder.subtotal)}</p>
+                    {Number(selectedOrder.discountAmount) > 0 && (
+                        <p>
+                            Discount
+                            {selectedOrder.couponCode ? ` (${selectedOrder.couponCode})` : ""}
+                            : −{formatCurrency(selectedOrder.discountAmount)}
+                        </p>
+                    )}
                     <p>Shipping: {formatCurrency(selectedOrder.shippingFee)}</p>
                     <p>
                         <strong>Total: {formatCurrency(selectedOrder.totalAmount)}</strong>

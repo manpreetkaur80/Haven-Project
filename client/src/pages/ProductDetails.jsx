@@ -297,6 +297,7 @@ import { useWishlist } from "../context/WishlistContext";
 import "../styles/product-details.css";
 import ProductReviews from "../components/ProductReviews";
 import RelatedProducts from "../components/RelatedProducts";
+import SizeGuide from "../components/SizeGuide";
 
 function ProductDetails() {
     const { id } = useParams();
@@ -318,6 +319,7 @@ function ProductDetails() {
     const [product, setProduct] = useState(null);
     const [selectedImage, setSelectedImage] = useState(0);
     const [selectedSize, setSelectedSize] = useState("");
+    const [showSizeGuide, setShowSizeGuide] = useState(false);
     const [selectedColor, setSelectedColor] = useState("");
     const [quantity, setQuantity] = useState(1);
 
@@ -522,6 +524,13 @@ function ProductDetails() {
                             <div className="detail-option-heading">
                                 <span>Size</span>
                                 <span>{selectedSize}</span>
+                                <button
+                                    type="button"
+                                    className="detail-size-guide-link"
+                                    onClick={() => setShowSizeGuide(true)}
+                                >
+                                    Size guide
+                                </button>
                             </div>
 
                             <div className="detail-size-list">
@@ -692,6 +701,19 @@ function ProductDetails() {
                 </section>
             </div>
 
+            {showSizeGuide && (
+                <SizeGuide
+                    highlightSize={selectedSize}
+                    defaultTab={
+                        /pant|trouser|jean|short|skirt|bottom/i.test(
+                            `${product.subcategory || ""} ${product.title || ""}`
+                        )
+                            ? "bottoms"
+                            : "tops"
+                    }
+                    onClose={() => setShowSizeGuide(false)}
+                />
+            )}
             <RelatedProducts product={product} />
             <ProductReviews productId={product._id} />
         </main>

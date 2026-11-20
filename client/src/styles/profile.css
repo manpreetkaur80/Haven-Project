@@ -460,3 +460,12 @@ html:has(.profile-page) #root {
 }
 
 .page-banner + .profile-page { padding-top: clamp(32px, 5vh, 56px); }
+
+.order-track-link {
+    display: inline-block;
+    margin-top: 12px;
+    color: #3a2a20;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}

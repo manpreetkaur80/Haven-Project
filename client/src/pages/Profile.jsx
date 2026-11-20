@@ -509,6 +509,9 @@ const [returnSubmitting, setReturnSubmitting] = useState(false);
                         <span>{order.paymentMethod || "COD"}</span>
                         <strong>{formatCurrency(order.totalAmount)}</strong>
                       </div>
+                      <Link to={`/orders/${order._id}`} className="order-track-link">
+                        Track order →
+                      </Link>
                       {order.orderStatus === "Delivered" && (
     <div>
         {returnOrderId === order._id ? (

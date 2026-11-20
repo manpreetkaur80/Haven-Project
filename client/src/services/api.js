@@ -600,3 +600,45 @@ export function createProductReview(token, productId, review) {
         body: JSON.stringify(review),
     });
 }
+
+
+// ========================================
+// DISCOUNT CODES
+// ========================================
+
+export function validateCoupon(token, code, subtotal) {
+    return apiRequest(`${API_URL}/coupons/validate`, {
+        method: "POST",
+        headers: jsonHeaders(token),
+        body: JSON.stringify({ code, subtotal }),
+    });
+}
+
+export function getAdminCoupons(token) {
+    return apiRequest(`${API_URL}/admin/coupons`, {
+        headers: authHeaders(token),
+    });
+}
+
+export function createCoupon(token, data) {
+    return apiRequest(`${API_URL}/admin/coupons`, {
+        method: "POST",
+        headers: jsonHeaders(token),
+        body: JSON.stringify(data),
+    });
+}
+
+export function updateCoupon(token, id, data) {
+    return apiRequest(`${API_URL}/admin/coupons/${id}`, {
+        method: "PATCH",
+        headers: jsonHeaders(token),
+        body: JSON.stringify(data),
+    });
+}
+
+export function deleteCoupon(token, id) {
+    return apiRequest(`${API_URL}/admin/coupons/${id}`, {
+        method: "DELETE",
+        headers: authHeaders(token),
+    });
+}
