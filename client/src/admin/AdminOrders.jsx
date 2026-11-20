@@ -27,6 +27,7 @@ function AdminOrders() {
     const [updating, setUpdating] = useState(false);
     const [error, setError] = useState("");
     const [message, setMessage] = useState("");
+    const [statusFilter, setStatusFilter] = useState("All");
     const handleReturnReview = async (decision) => {
     if (!selectedOrder) return;
 
@@ -212,6 +213,12 @@ const handleMarkRefunded = async () => {
         return <main className="admin-orders-page"><p className="admin-loading">Loading orders...</p></main>;
     }
 
+    const statusOptions = [...new Set(orders.map((order) => order.orderStatus).filter(Boolean))];
+    const visibleOrders =
+        statusFilter === "All"
+            ? orders
+            : orders.filter((order) => order.orderStatus === statusFilter);
+
     return (
         <main className="admin-orders-page">
             <header className="admin-page-head">
@@ -228,7 +235,30 @@ const handleMarkRefunded = async () => {
             {error && <p role="alert" className="admin-alert admin-alert-error">{error}</p>}
             {message && <p role="status" className="admin-alert admin-alert-ok">{message}</p>}
 
-            <h2 className="admin-h2">All orders <span>({orders.length})</span></h2>
+            <h2 className="admin-h2">
+                {statusFilter === "All" ? "All orders" : statusFilter}{" "}
+                <span>({visibleOrders.length})</span>
+            </h2>
+
+            {orders.length > 0 && (
+                <div className="admin-filter-tabs" role="group" aria-label="Filter orders by status">
+                    {["All", ...statusOptions].map((status) => (
+                        <button
+                            type="button"
+                            key={status}
+                            className={statusFilter === status ? "is-active" : ""}
+                            onClick={() => setStatusFilter(status)}
+                        >
+                            {status}
+                            <span>
+                                {status === "All"
+                                    ? orders.length
+                                    : orders.filter((order) => order.orderStatus === status).length}
+                            </span>
+                        </button>
+                    ))}
+                </div>
+            )}
 
             {orders.length === 0 ? (
                 <p>No orders have been placed yet.</p>
@@ -248,7 +278,7 @@ const handleMarkRefunded = async () => {
                         </thead>
 
                         <tbody>
-                            {orders.map((order) => (
+                            {visibleOrders.map((order) => (
                                 <tr key={order._id}>
                                     <td>#{order._id.slice(-8).toUpperCase()}</td>
                                     <td>{order.customer?.fullName || "Customer"}</td>

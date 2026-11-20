@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { getAdminProducts, getAdminOrders } from "../services/api";
-import "../styles/adminDashboard.css";
+import "../styles/admin-dashboard.css";
 
 function AdminDashboard() {
     const { token, user, loading: authLoading } = useAuth();
@@ -96,6 +96,55 @@ function AdminDashboard() {
         )
         .slice(0, 5);
 
+    /* ---- Last 7 days of sales (excludes cancelled / returned / refunded) ---- */
+    const countedOrders = orders.filter(
+        (order) => !["Cancelled", "Returned", "Refunded"].includes(order.orderStatus)
+    );
+    const days = Array.from({ length: 7 }, (_, index) => {
+        const date = new Date();
+        date.setHours(0, 0, 0, 0);
+        date.setDate(date.getDate() - (6 - index));
+        return { date, key: date.toDateString(), total: 0, count: 0 };
+    });
+    countedOrders.forEach((order) => {
+        const day = days.find(
+            (item) => item.key === new Date(order.createdAt).toDateString()
+        );
+        if (day) {
+            day.total += Number(order.totalAmount || 0);
+            day.count += 1;
+        }
+    });
+    const weekTotal = days.reduce((sum, day) => sum + day.total, 0);
+    const weekCount = days.reduce((sum, day) => sum + day.count, 0);
+    const maxDay = Math.max(...days.map((day) => day.total), 1);
+
+    /* ---- Order status breakdown ---- */
+    const statusCounts = orders.reduce((map, order) => {
+        const key = order.orderStatus || "Unknown";
+        map[key] = (map[key] || 0) + 1;
+        return map;
+    }, {});
+    const statusList = Object.entries(statusCounts).sort((a, b) => b[1] - a[1]);
+
+    /* ---- Needs attention ---- */
+    const returnRequests = orders.filter(
+        (order) => order.orderStatus === "Return Requested"
+    ).length;
+    const lowStock = products
+        .filter((product) => Number(product.stock ?? 0) <= 5)
+        .sort((a, b) => Number(a.stock ?? 0) - Number(b.stock ?? 0));
+    const unpublished = products.length - publishedProducts;
+
+    const hour = new Date().getHours();
+    const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
+    const firstName = String(user?.fullName || user?.name || "").split(" ")[0];
+    const today = new Date().toLocaleDateString("en-IN", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+    });
+
     const formatCurrency = (amount) =>
         `₹${Number(amount || 0).toLocaleString("en-IN")}`;
 
@@ -132,114 +181,246 @@ function AdminDashboard() {
         );
     }
 
+    const chart = { width: 560, height: 220, left: 8, top: 16, bottom: 34 };
+    const plotH = chart.height - chart.top - chart.bottom;
+    const slot = (chart.width - chart.left * 2) / days.length;
+
     return (
-        <main className="admin-dashboard-page">
-            <header className="admin-dashboard-header">
-                <div>
-                    <p className="dashboard-eyebrow">HAVEN ADMINISTRATION</p>
-                    <h1>Dashboard</h1>
-                    <p>Welcome back. Here's what's happening in your store.</p>
+        <main className="admin-dashboard-page ad-page">
+            <section className="ad-hero">
+                <div className="ad-hero-copy">
+                    <p className="ad-eyebrow">{today}</p>
+                    <h1>
+                        {greeting}
+                        {firstName ? `, ${firstName}` : ""}.
+                    </h1>
+                    <p>Here is what is happening in your store today.</p>
+                    <div className="ad-hero-actions">
+                        <Link to="/admin/products/new" className="ad-btn">
+                            Add a product
+                        </Link>
+                        <Link to="/admin/orders" className="ad-btn ad-btn-ghost">
+                            View orders
+                        </Link>
+                    </div>
                 </div>
 
-                <button
-                    type="button"
-                    className="dashboard-refresh-btn"
-                    onClick={() => window.location.reload()}
-                >
-                    Refresh Dashboard
-                </button>
-            </header>
+                <div className="ad-hero-figure">
+                    <span>Order value</span>
+                    <strong>{formatCurrency(orderValue)}</strong>
+                    <small>Excludes cancelled, returned and refunded orders</small>
+                </div>
+            </section>
 
-            <section className="dashboard-stats">
-                <article className="dashboard-stat-card">
-                    <span className="dashboard-stat-label">Total Products</span>
-                    <strong>{products.length}</strong>
-                    <small>Products in your catalogue</small>
-                </article>
-
-                <article className="dashboard-stat-card">
-                    <span className="dashboard-stat-label">Published Products</span>
-                    <strong>{publishedProducts}</strong>
-                    <small>Visible in your store</small>
-                </article>
-
-                <article className="dashboard-stat-card">
-                    <span className="dashboard-stat-label">Total Orders</span>
+            <section className="ad-kpis" aria-label="Store summary">
+                <article className="ad-kpi">
+                    <span className="ad-kpi-label">Total orders</span>
                     <strong>{orders.length}</strong>
-                    <small>All customer orders</small>
+                    <small>{deliveredOrders} delivered</small>
                 </article>
-
-                <article className="dashboard-stat-card">
-                    <span className="dashboard-stat-label">Pending Orders</span>
+                <article className="ad-kpi">
+                    <span className="ad-kpi-label">Pending orders</span>
                     <strong>{pendingOrders}</strong>
                     <small>Placed, confirmed or processing</small>
                 </article>
-
-                <article className="dashboard-stat-card dashboard-stat-highlight">
-                    <span className="dashboard-stat-label">Order Value</span>
-                    <strong>{formatCurrency(orderValue)}</strong>
-                    <small>Excludes cancelled, returned and refunded orders</small>
+                <article className="ad-kpi">
+                    <span className="ad-kpi-label">Live products</span>
+                    <strong>
+                        {publishedProducts}
+                        <em>/ {products.length}</em>
+                    </strong>
+                    <small>{unpublished} hidden from the store</small>
                 </article>
-
-                <article className="dashboard-stat-card">
-                    <span className="dashboard-stat-label">Delivered Orders</span>
-                    <strong>{deliveredOrders}</strong>
-                    <small>Successfully delivered</small>
+                <article className="ad-kpi">
+                    <span className="ad-kpi-label">Last 7 days</span>
+                    <strong>{formatCurrency(weekTotal)}</strong>
+                    <small>{weekCount} {weekCount === 1 ? "order" : "orders"}</small>
                 </article>
             </section>
 
-            <section className="dashboard-quick-section">
-                <div className="dashboard-section-heading">
-                    <div>
-                        <p className="dashboard-eyebrow">SHORTCUTS</p>
-                        <h2>Manage Your Store</h2>
-                    </div>
-                </div>
+            <section className="ad-grid">
+                <article className="ad-card ad-card-wide">
+                    <header className="ad-card-head">
+                        <div>
+                            <p className="ad-eyebrow">Sales</p>
+                            <h2>Last 7 days</h2>
+                        </div>
+                        <strong className="ad-card-figure">{formatCurrency(weekTotal)}</strong>
+                    </header>
 
-                <div className="dashboard-quick-grid">
-                    <Link to="/admin/products" className="dashboard-quick-card">
-                        <span className="dashboard-quick-number">01</span>
-                        <h3>Manage Products</h3>
-                        <p>View, edit, publish or delete products.</p>
-                        <span className="dashboard-quick-link">Manage products →</span>
-                    </Link>
+                    <svg
+                        className="ad-chart"
+                        viewBox={`0 0 ${chart.width} ${chart.height}`}
+                        role="img"
+                        aria-label={`Sales for the last 7 days: ${formatCurrency(weekTotal)} from ${weekCount} orders`}
+                    >
+                        {[0, 0.5, 1].map((fraction) => {
+                            const y = chart.top + plotH * (1 - fraction);
+                            return (
+                                <line
+                                    key={fraction}
+                                    x1={chart.left}
+                                    x2={chart.width - chart.left}
+                                    y1={y}
+                                    y2={y}
+                                    className="ad-chart-grid"
+                                />
+                            );
+                        })}
+                        {days.map((day, index) => {
+                            const barH = Math.max((day.total / maxDay) * plotH, day.total ? 3 : 0);
+                            const x = chart.left + index * slot + slot * 0.22;
+                            const w = slot * 0.56;
+                            return (
+                                <g key={day.key}>
+                                    <rect
+                                        x={x}
+                                        y={chart.top + plotH - barH}
+                                        width={w}
+                                        height={barH}
+                                        className={day.total ? "ad-bar" : "ad-bar is-empty"}
+                                    >
+                                        <title>
+                                            {`${day.date.toLocaleDateString("en-IN", { day: "numeric", month: "short" })}: ${formatCurrency(day.total)} (${day.count} ${day.count === 1 ? "order" : "orders"})`}
+                                        </title>
+                                    </rect>
+                                    <text
+                                        x={x + w / 2}
+                                        y={chart.height - 12}
+                                        textAnchor="middle"
+                                        className="ad-chart-label"
+                                    >
+                                        {day.date.toLocaleDateString("en-IN", { weekday: "short" })}
+                                    </text>
+                                </g>
+                            );
+                        })}
+                    </svg>
+                </article>
 
-                    <Link to="/admin/products/new" className="dashboard-quick-card">
-                        <span className="dashboard-quick-number">02</span>
-                        <h3>Add New Product</h3>
-                        <p>Add products and upload collection images.</p>
-                        <span className="dashboard-quick-link">Add product →</span>
-                    </Link>
+                <article className="ad-card">
+                    <header className="ad-card-head">
+                        <div>
+                            <p className="ad-eyebrow">Orders</p>
+                            <h2>By status</h2>
+                        </div>
+                    </header>
 
-                    <Link to="/admin/orders" className="dashboard-quick-card">
-                        <span className="dashboard-quick-number">03</span>
-                        <h3>Manage Orders</h3>
-                        <p>Review customer orders and update their status.</p>
-                        <span className="dashboard-quick-link">View orders →</span>
-                    </Link>
-                </div>
+                    {statusList.length === 0 ? (
+                        <p className="ad-muted">No orders yet.</p>
+                    ) : (
+                        <ul className="ad-status-list">
+                            {statusList.map(([status, count]) => (
+                                <li key={status}>
+                                    <div>
+                                        <span>{status}</span>
+                                        <strong>{count}</strong>
+                                    </div>
+                                    <span className="ad-status-track">
+                                        <span style={{ width: `${(count / orders.length) * 100}%` }} />
+                                    </span>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                </article>
+
+                <article className="ad-card">
+                    <header className="ad-card-head">
+                        <div>
+                            <p className="ad-eyebrow">To do</p>
+                            <h2>Needs attention</h2>
+                        </div>
+                    </header>
+
+                    <ul className="ad-todo">
+                        <li>
+                            <Link to="/admin/orders">
+                                <strong>{pendingOrders}</strong>
+                                <span>orders waiting to be processed</span>
+                                <em aria-hidden="true">→</em>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/admin/orders">
+                                <strong>{returnRequests}</strong>
+                                <span>return requests to review</span>
+                                <em aria-hidden="true">→</em>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/admin/products">
+                                <strong>{lowStock.length}</strong>
+                                <span>products low on stock (5 or fewer)</span>
+                                <em aria-hidden="true">→</em>
+                            </Link>
+                        </li>
+                    </ul>
+                </article>
+
+                <article className="ad-card ad-card-wide">
+                    <header className="ad-card-head">
+                        <div>
+                            <p className="ad-eyebrow">Inventory</p>
+                            <h2>Low stock</h2>
+                        </div>
+                        <Link to="/admin/products" className="ad-link">
+                            All products →
+                        </Link>
+                    </header>
+
+                    {lowStock.length === 0 ? (
+                        <p className="ad-muted">Every product has healthy stock.</p>
+                    ) : (
+                        <ul className="ad-lowstock">
+                            {lowStock.slice(0, 6).map((product) => (
+                                <li key={product._id}>
+                                    <span className="ad-lowstock-thumb">
+                                        {product.images?.[0]?.url ? (
+                                            <img src={product.images[0].url} alt="" />
+                                        ) : (
+                                            product.name?.charAt(0)
+                                        )}
+                                    </span>
+                                    <span className="ad-lowstock-name">
+                                        <strong>{product.name}</strong>
+                                        <small>
+                                            {product.category}
+                                            {product.subcategory ? ` · ${product.subcategory}` : ""}
+                                        </small>
+                                    </span>
+                                    <span
+                                        className={`ad-stock ${Number(product.stock ?? 0) === 0 ? "is-out" : ""}`}
+                                    >
+                                        {Number(product.stock ?? 0) === 0
+                                            ? "Out of stock"
+                                            : `${product.stock} left`}
+                                    </span>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                </article>
             </section>
 
-            <section className="dashboard-recent-section">
-                <div className="dashboard-section-heading">
+            <section className="ad-card ad-recent">
+                <header className="ad-card-head">
                     <div>
-                        <p className="dashboard-eyebrow">LATEST ACTIVITY</p>
-                        <h2>Recent Orders</h2>
+                        <p className="ad-eyebrow">Latest activity</p>
+                        <h2>Recent orders</h2>
                     </div>
-
-                    <Link to="/admin/orders" className="dashboard-view-all">
-                        View All Orders →
+                    <Link to="/admin/orders" className="ad-link">
+                        View all orders →
                     </Link>
-                </div>
+                </header>
 
                 {recentOrders.length === 0 ? (
-                    <div className="dashboard-no-orders">
-                        <h3>No orders yet</h3>
-                        <p>Customer orders will appear here when they are placed.</p>
-                    </div>
+                    <p className="ad-muted">
+                        Customer orders will appear here when they are placed.
+                    </p>
                 ) : (
-                    <div className="dashboard-orders-wrapper">
-                        <table className="dashboard-orders-table">
+                    <div className="admin-table-wrap">
+                        <table className="admin-table">
                             <thead>
                                 <tr>
                                     <th>Order</th>
@@ -250,28 +431,24 @@ function AdminDashboard() {
                                     <th>Status</th>
                                 </tr>
                             </thead>
-
                             <tbody>
                                 {recentOrders.map((order) => (
                                     <tr key={order._id}>
-                                        <td>
-                                            #{order._id.slice(-7).toUpperCase()}
-                                        </td>
-
+                                        <td>#{order._id.slice(-7).toUpperCase()}</td>
                                         <td>
                                             {order.customer?.fullName ||
                                                 order.customerId?.fullName ||
                                                 "Customer"}
                                         </td>
-
                                         <td>{formatDate(order.createdAt)}</td>
-
                                         <td>{formatCurrency(order.totalAmount)}</td>
-
                                         <td>{order.paymentMethod || "—"}</td>
-
                                         <td>
-                                            <span className={`dashboard-order-status status-${(order.orderStatus || "unknown").toLowerCase().replace(/\s+/g, "-")}`}>
+                                            <span
+                                                className={`admin-badge status-${(order.orderStatus || "unknown")
+                                                    .toLowerCase()
+                                                    .replace(/\s+/g, "-")}`}
+                                            >
                                                 {order.orderStatus || "Unknown"}
                                             </span>
                                         </td>
