@@ -148,12 +148,6 @@ function Orders() {
                             <span>Subtotal</span>
                             <span>{money(order.subtotal)}</span>
                         </div>
-                        {Number(order.discountAmount) > 0 && (
-                            <div className="ord-row">
-                                <span>Discount{order.couponCode ? ` (${order.couponCode})` : ""}</span>
-                                <span>− {money(order.discountAmount)}</span>
-                            </div>
-                        )}
                         <div className="ord-row">
                             <span>Shipping</span>
                             <span>{Number(order.shippingFee) > 0 ? money(order.shippingFee) : "Free"}</span>

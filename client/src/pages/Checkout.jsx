@@ -7,7 +7,6 @@ import { useAuth } from "../context/AuthContext";
 
 import {
     createOrder,
-    validateCoupon,
     getMyProfile,
     addMyAddress,
 } from "../services/api";
@@ -33,10 +32,6 @@ function Checkout() {
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState(emptyForm);
-    const [couponInput, setCouponInput] = useState("");
-    const [coupon, setCoupon] = useState(null); // { code, discountAmount }
-    const [couponError, setCouponError] = useState("");
-    const [couponBusy, setCouponBusy] = useState(false);
     const [savedAddresses, setSavedAddresses] = useState([]);
     const [selectedAddressId, setSelectedAddressId] = useState("");
     const [saveAddress, setSaveAddress] = useState(false);
@@ -270,7 +265,6 @@ function Checkout() {
                     pincode: formData.pincode.trim(),
                 },
                 paymentMethod: formData.paymentMethod,
-                couponCode: coupon ? coupon.code : "",
                 items: cartItems.map((item) => ({
                     productId: item.productId,
                     quantity: item.quantity,
@@ -300,59 +294,6 @@ function Checkout() {
             setIsSubmitting(false);
         }
     }
-
-    // If the bag changes after a code was applied, check it again.
-    useEffect(() => {
-        if (!coupon) return;
-        let cancelled = false;
-        validateCoupon(token, coupon.code, subtotal)
-            .then((result) => {
-                if (!cancelled) {
-                    setCoupon({
-                        code: result.code,
-                        discountAmount: result.discountAmount,
-                    });
-                }
-            })
-            .catch((error) => {
-                if (!cancelled) {
-                    setCoupon(null);
-                    setCouponError(error.message || "Code removed.");
-                }
-            });
-        return () => {
-            cancelled = true;
-        };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [subtotal]);
-
-    async function applyCoupon() {
-        const code = couponInput.trim();
-        if (!code) return;
-        setCouponBusy(true);
-        setCouponError("");
-        try {
-            const result = await validateCoupon(token, code, subtotal);
-            setCoupon({
-                code: result.code,
-                discountAmount: result.discountAmount,
-            });
-            setCouponInput("");
-        } catch (error) {
-            setCoupon(null);
-            setCouponError(error.message || "This code is not valid.");
-        } finally {
-            setCouponBusy(false);
-        }
-    }
-
-    function removeCoupon() {
-        setCoupon(null);
-        setCouponError("");
-    }
-
-    const discount = coupon ? coupon.discountAmount : 0;
-    const orderTotal = Math.max(0, subtotal - discount);
 
     if (cartItems.length === 0) {
         return (
@@ -644,55 +585,6 @@ function Checkout() {
                             <span>{formatPrice(subtotal)}</span>
                         </div>
 
-                        <div className="checkout-coupon">
-                            {coupon ? (
-                                <div className="checkout-coupon-applied">
-                                    <span>
-                                        <b>{coupon.code}</b> applied
-                                    </span>
-                                    <button type="button" onClick={removeCoupon}>
-                                        Remove
-                                    </button>
-                                </div>
-                            ) : (
-                                <div className="checkout-coupon-form">
-                                    <input
-                                        type="text"
-                                        value={couponInput}
-                                        onChange={(e) => setCouponInput(e.target.value)}
-                                        onKeyDown={(e) => {
-                                            if (e.key === "Enter") {
-                                                e.preventDefault();
-                                                applyCoupon();
-                                            }
-                                        }}
-                                        placeholder="Discount code"
-                                        aria-label="Discount code"
-                                        autoComplete="off"
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={applyCoupon}
-                                        disabled={couponBusy || !couponInput.trim()}
-                                    >
-                                        {couponBusy ? "Checking" : "Apply"}
-                                    </button>
-                                </div>
-                            )}
-                            {couponError && (
-                                <p className="checkout-coupon-error" role="alert">
-                                    {couponError}
-                                </p>
-                            )}
-                        </div>
-
-                        {coupon && (
-                            <div className="checkout-summary-row checkout-discount-row">
-                                <span>Discount ({coupon.code})</span>
-                                <span>− {formatPrice(discount)}</span>
-                            </div>
-                        )}
-
                         <div className="checkout-summary-row">
                             <span>Shipping</span>
                             <span>Calculated by server</span>
@@ -700,7 +592,7 @@ function Checkout() {
 
                         <div className="checkout-total">
                             <span>Estimated total</span>
-                            <strong>{formatPrice(orderTotal)}</strong>
+                            <strong>{formatPrice(subtotal)}</strong>
                         </div>
 
                         <p className="checkout-note">

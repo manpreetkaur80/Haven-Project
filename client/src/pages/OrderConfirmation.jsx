@@ -95,15 +95,6 @@ function OrderConfirmation() {
                     ))}
                 </div>
 
-                {Number(order.discountAmount) > 0 && (
-                    <div className="confirmation-discount">
-                        <span>Discount{order.couponCode ? ` (${order.couponCode})` : ""}</span>
-                        <span>
-                            − ₹{Number(order.discountAmount).toLocaleString("en-IN")}
-                        </span>
-                    </div>
-                )}
-
                 <div className="confirmation-total">
                     <span>Total amount</span>
                     <strong>

@@ -20,7 +20,6 @@ import NotFound from "./pages/NotFound";
 import AddProduct from "./admin/AddProduct";
 import AdminProducts from "./admin/AdminProducts";
 import AdminDashboard from "./admin/AdminDashboard";
-import AdminCoupons from "./admin/AdminCoupons";
 import Orders from "./pages/Orders";
 import { CartProvider } from "./context/CartContext";
 import { AuthProvider } from "./context/AuthContext";
@@ -274,17 +273,6 @@ function App() {
                                         <AdminLayout>
 <AddProduct />
 </AdminLayout>
-                                    </ProtectedRoute>
-                                }
-                            />
-
-                            <Route
-                                path="/admin/coupons"
-                                element={
-                                    <ProtectedRoute adminOnly>
-                                        <AdminLayout>
-                                            <AdminCoupons />
-                                        </AdminLayout>
                                     </ProtectedRoute>
                                 }
                             />

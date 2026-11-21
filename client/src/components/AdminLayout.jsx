@@ -42,12 +42,6 @@ const ICONS = {
             <path d="M9 8.5h6M9 12h6" />
         </svg>
     ),
-    coupons: (
-        <svg {...icon}>
-            <path d="M3.5 8.5v-3h17v3a2.5 2.5 0 0 0 0 5v3h-17v-3a2.5 2.5 0 0 0 0-5Z" />
-            <path d="M14.5 5.5v13" strokeDasharray="1.5 2.5" />
-        </svg>
-    ),
     store: (
         <svg {...icon}>
             <path d="M4 9.5 5.5 4h13L20 9.5M4 9.5v10h16v-10M4 9.5h16M9.5 19.5v-5h5v5" />
@@ -60,7 +54,6 @@ const ADMIN_LINKS = [
     { to: "/admin/products", label: "Products", icon: "products", end: true },
     { to: "/admin/products/new", label: "Add product", icon: "add", end: true },
     { to: "/admin/orders", label: "Orders", icon: "orders", end: true },
-    { to: "/admin/coupons", label: "Discount codes", icon: "coupons", end: true },
 ];
 
 function AdminLayout({ children }) {
