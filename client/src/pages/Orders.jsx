@@ -153,7 +153,12 @@ function Orders() {
                             <span>{Number(order.shippingFee) > 0 ? money(order.shippingFee) : "Free"}</span>
                         </div>
                         <div className="ord-row ord-total">
-                            <span>Total · {order.paymentMethod || "COD"}</span>
+                            <span>
+                                Total ·{" "}
+                                {order.paymentMethod === "Razorpay"
+                                    ? `Online (${order.paymentStatus})`
+                                    : "Cash on delivery"}
+                            </span>
                             <strong>{money(order.totalAmount)}</strong>
                         </div>
                     </section>

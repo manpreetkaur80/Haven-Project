@@ -7,12 +7,27 @@ import { useAuth } from "../context/AuthContext";
 
 import {
     createOrder,
+    verifyPayment,
+    abandonPayment,
     getMyProfile,
     addMyAddress,
 } from "../services/api";
 
 import PageBanner from "../components/PageBanner";
 import "../styles/checkout.css";
+
+// Loads Razorpay's checkout script once, only when someone pays online.
+function loadRazorpay() {
+    if (window.Razorpay) return Promise.resolve(true);
+
+    return new Promise((resolve) => {
+        const script = document.createElement("script");
+        script.src = "https://checkout.razorpay.com/v1/checkout.js";
+        script.onload = () => resolve(true);
+        script.onerror = () => resolve(false);
+        document.body.appendChild(script);
+    });
+}
 
 const emptyForm = {
     fullName: "",
@@ -281,6 +296,77 @@ function Checkout() {
                 );
             }
 
+            // Online payment: open Razorpay, then confirm with the server.
+            if (result.payment) {
+                const loaded = await loadRazorpay();
+
+                if (!loaded) {
+                    await abandonPayment(token, result.order._id).catch(() => {});
+                    throw new Error(
+                        "Couldn't load the payment window. Check your connection or choose Cash on Delivery."
+                    );
+                }
+
+                let finished = false;
+
+                const razorpay = new window.Razorpay({
+                    key: result.payment.keyId,
+                    amount: result.payment.amount,
+                    currency: result.payment.currency,
+                    order_id: result.payment.razorpayOrderId,
+                    name: "HAVEN",
+                    description: `Order #${String(result.order._id).slice(-8).toUpperCase()}`,
+                    prefill: {
+                        name: formData.fullName.trim(),
+                        email: formData.email.trim(),
+                        contact: formData.phone.trim(),
+                    },
+                    theme: { color: "#3a2a20" },
+                    handler: async (response) => {
+                        finished = true;
+                        try {
+                            const verified = await verifyPayment(token, {
+                                orderId: result.order._id,
+                                razorpay_order_id: response.razorpay_order_id,
+                                razorpay_payment_id: response.razorpay_payment_id,
+                                razorpay_signature: response.razorpay_signature,
+                            });
+
+                            clearCart();
+                            navigate(`/order-confirmation/${result.order._id}`, {
+                                state: { order: verified.order || result.order },
+                            });
+                        } catch (verifyError) {
+                            setSubmitError(
+                                verifyError.message ||
+                                    "We couldn't confirm your payment. If money was deducted it will be refunded."
+                            );
+                            setIsSubmitting(false);
+                        }
+                    },
+                    modal: {
+                        ondismiss: async () => {
+                            if (finished) return;
+                            await abandonPayment(token, result.order._id).catch(() => {});
+                            setSubmitError(
+                                "Payment was cancelled. Your bag is still here whenever you're ready."
+                            );
+                            setIsSubmitting(false);
+                        },
+                    },
+                });
+
+                razorpay.on("payment.failed", (failure) => {
+                    setSubmitError(
+                        failure?.error?.description ||
+                            "The payment failed. You can try again."
+                    );
+                });
+
+                razorpay.open();
+                return; // stay on the page until the payment finishes
+            }
+
             clearCart();
 
             navigate(`/order-confirmation/${result.order._id}`, {
@@ -290,8 +376,12 @@ function Checkout() {
             setSubmitError(
                 error.message || "Unable to place your order. Please try again."
             );
-        } finally {
             setIsSubmitting(false);
+        } finally {
+            // For online payments the Razorpay window decides when we're done.
+            if (formData.paymentMethod !== "Razorpay") {
+                setIsSubmitting(false);
+            }
         }
     }
 
@@ -527,6 +617,20 @@ function Checkout() {
                                     <small>Pay when your order arrives.</small>
                                 </span>
                             </label>
+
+                            <label className="checkout-payment-option">
+                                <input
+                                    type="radio"
+                                    name="paymentMethod"
+                                    value="Razorpay"
+                                    checked={formData.paymentMethod === "Razorpay"}
+                                    onChange={handleChange}
+                                />
+                                <span>
+                                    <strong>Pay online</strong>
+                                    <small>UPI, cards, net banking and wallets — secured by Razorpay.</small>
+                                </span>
+                            </label>
                         </section>
 
                         {submitError && (
@@ -543,7 +647,9 @@ function Checkout() {
                         >
                             {isSubmitting
                                 ? "PLACING YOUR ORDER..."
-                                : "PLACE ORDER"}
+                                : formData.paymentMethod === "Razorpay"
+                                  ? "PAY SECURELY"
+                                  : "PLACE ORDER"}
                         </button>
 
                         <Link to="/cart" className="checkout-back">

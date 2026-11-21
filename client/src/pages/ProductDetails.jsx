@@ -346,8 +346,10 @@ function ProductDetails() {
                 if (!active) return;
 
                 setProduct(data);
-                setSelectedSize(data.sizes?.[0] || "");
-                setSelectedColor(data.colors?.[0] || "");
+                // Start on a size/colour that is actually in stock.
+                const firstInStock = data.variants?.find((v) => v.stock > 0);
+                setSelectedSize(firstInStock?.size ?? data.sizes?.[0] ?? "");
+                setSelectedColor(firstInStock?.color ?? data.colors?.[0] ?? "");
             })
             .catch((err) => {
                 if (active) {
@@ -401,11 +403,16 @@ function ProductDetails() {
             return;
         }
 
+        if (product.variants?.length && (available ?? 0) < 1) {
+            setMessage("That combination is sold out.");
+            return;
+        }
+
         addToCart(
             product,
             selectedSize,
             selectedColor,
-            quantity
+            Math.min(quantity, available ?? quantity)
         );
 
         setMessage("Added to your bag successfully!");
@@ -436,6 +443,67 @@ function ProductDetails() {
     const images = product.images || [];
     const currentImage = images[selectedImage];
     const outOfStock = Number(product.stock) <= 0;
+
+    // Stock by size + colour (older products without variants use the single total).
+    const hasVariants = product.variants?.length > 0;
+    const selectionReady =
+        (!product.sizes?.length || Boolean(selectedSize)) &&
+        (!product.colors?.length || Boolean(selectedColor));
+    // An option is greyed out only when it is sold out in every combination.
+    const sizeHasStock = (size) =>
+        !hasVariants ||
+        product.variants.some((v) => v.size === size && v.stock > 0);
+    const colorHasStock = (color) =>
+        !hasVariants ||
+        product.variants.some((v) => v.color === color && v.stock > 0);
+
+    // Picking a size/colour that is sold out with the current other choice
+    // switches the other choice to one that is in stock.
+    function chooseSize(size) {
+        setSelectedSize(size);
+        if (hasVariants) {
+            const ok = product.variants.some(
+                (v) => v.size === size && v.color === selectedColor && v.stock > 0
+            );
+            if (!ok) {
+                const alt = product.variants.find(
+                    (v) => v.size === size && v.stock > 0
+                );
+                if (alt) setSelectedColor(alt.color);
+            }
+        }
+        setQuantity(1);
+        setMessage("");
+    }
+
+    function chooseColor(color) {
+        setSelectedColor(color);
+        if (hasVariants) {
+            const ok = product.variants.some(
+                (v) => v.color === color && v.size === selectedSize && v.stock > 0
+            );
+            if (!ok) {
+                const alt = product.variants.find(
+                    (v) => v.color === color && v.stock > 0
+                );
+                if (alt) setSelectedSize(alt.size);
+            }
+        }
+        setQuantity(1);
+        setMessage("");
+    }
+
+    const available = !hasVariants
+        ? Number(product.stock) || 0
+        : selectionReady
+          ? product.variants
+                .filter(
+                    (v) =>
+                        (!product.sizes?.length || v.size === selectedSize) &&
+                        (!product.colors?.length || v.color === selectedColor)
+                )
+                .reduce((sum, v) => sum + v.stock, 0)
+          : null;
     const saved = isWishlisted(product._id);
 
     return (
@@ -543,10 +611,13 @@ function ProductDetails() {
                                                 ? "selected"
                                                 : ""
                                         }`}
-                                        onClick={() => {
-                                            setSelectedSize(size);
-                                            setMessage("");
-                                        }}
+                                        disabled={!sizeHasStock(size)}
+                                        title={
+                                            sizeHasStock(size)
+                                                ? undefined
+                                                : "Sold out"
+                                        }
+                                        onClick={() => chooseSize(size)}
                                         aria-pressed={
                                             selectedSize === size
                                         }
@@ -576,10 +647,13 @@ function ProductDetails() {
                                                 ? "selected"
                                                 : ""
                                         }`}
-                                        onClick={() => {
-                                            setSelectedColor(color);
-                                            setMessage("");
-                                        }}
+                                        disabled={!colorHasStock(color)}
+                                        title={
+                                            colorHasStock(color)
+                                                ? undefined
+                                                : "Sold out"
+                                        }
+                                        onClick={() => chooseColor(color)}
                                         aria-pressed={
                                             selectedColor === color
                                         }
@@ -596,7 +670,9 @@ function ProductDetails() {
                         <div className="detail-option-heading">
                             <span>Quantity</span>
                             <span>
-                                {Number(product.stock) || 0} available
+                                {available === null
+                                    ? "Select options"
+                                    : `${available} available`}
                             </span>
                         </div>
 
@@ -621,14 +697,15 @@ function ProductDetails() {
                                 onClick={() =>
                                     setQuantity((previous) =>
                                         Math.min(
-                                            Number(product.stock) || 0,
+                                            available ?? 0,
                                             previous + 1
                                         )
                                     )
                                 }
                                 disabled={
                                     outOfStock ||
-                                    quantity >= Number(product.stock)
+                                    available === null ||
+                                    quantity >= available
                                 }
                                 aria-label="Increase quantity"
                             >
@@ -644,7 +721,11 @@ function ProductDetails() {
                     >
                         {outOfStock
                             ? "Currently out of stock"
-                            : "In stock"}
+                            : available !== null && available <= 3
+                              ? available === 0
+                                  ? "Sold out in this size and colour"
+                                  : `Only ${available} left`
+                              : "In stock"}
                     </p>
 
                     {/* Add to bag */}

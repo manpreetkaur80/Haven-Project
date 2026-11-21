@@ -86,6 +86,10 @@ function Login({ adminOnly = false }) {
                     {submitting ? "Signing in..." : "Sign in"}
                 </button>
 
+                <p className="auth-switch auth-forgot">
+                    <Link to="/forgot-password">Forgot your password?</Link>
+                </p>
+
                 {!adminOnly && (
                     <p className="auth-switch">
                         New to HAVEN? <Link to="/signup">Create an account</Link>

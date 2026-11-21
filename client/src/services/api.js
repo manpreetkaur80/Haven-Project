@@ -328,7 +328,9 @@
 //         body: JSON.stringify({ reason }),
 //     });
 // }
-const API_URL = "http://localhost:5000/api";
+// Set VITE_API_URL in client/.env (e.g. https://your-api.onrender.com/api) for production.
+export const API_URL =
+    import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 const AUTH_URL = `${API_URL}/auth`;
 const PROFILE_URL = `${API_URL}/profile`;
 
@@ -601,3 +603,44 @@ export function createProductReview(token, productId, review) {
     });
 }
 
+
+
+// ========================================
+// PASSWORD RESET
+// ========================================
+
+export function requestPasswordReset(email) {
+    return apiRequest(`${AUTH_URL}/forgot-password`, {
+        method: "POST",
+        headers: jsonHeaders(),
+        body: JSON.stringify({ email }),
+    });
+}
+
+export function resetPassword(token, password) {
+    return apiRequest(`${AUTH_URL}/reset-password`, {
+        method: "POST",
+        headers: jsonHeaders(),
+        body: JSON.stringify({ token, password }),
+    });
+}
+
+// ========================================
+// ONLINE PAYMENT
+// ========================================
+
+export function verifyPayment(token, payload) {
+    return apiRequest(`${API_URL}/payments/verify`, {
+        method: "POST",
+        headers: jsonHeaders(token),
+        body: JSON.stringify(payload),
+    });
+}
+
+export function abandonPayment(token, orderId) {
+    return apiRequest(`${API_URL}/payments/abandon`, {
+        method: "POST",
+        headers: jsonHeaders(token),
+        body: JSON.stringify({ orderId }),
+    });
+}

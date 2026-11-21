@@ -1,5 +1,9 @@
 import ImageDropzone from "../components/ImageDropzone";
 import TagInput from "../components/TagInput";
+import StockGrid, {
+    buildVariants,
+    stockMapFromProduct
+} from "../components/StockGrid";
 import "../styles/admin.css";
 
 import { useEffect, useState } from "react";
@@ -20,7 +24,6 @@ const emptyForm = {
     subcategory: "",
     sizes: "",
     colors: "",
-    stock: "",
     isFeatured: false,
     isPublished: true
 };
@@ -38,6 +41,7 @@ function AdminProducts() {
     const [editingProduct, setEditingProduct] = useState(null);
     const [formData, setFormData] = useState(emptyForm);
     const [images, setImages] = useState([]);
+    const [stockMap, setStockMap] = useState({});
 
     const fetchProducts = async () => {
         if (!token) return;
@@ -88,11 +92,11 @@ function AdminProducts() {
             subcategory: product.subcategory || "",
             sizes: (product.sizes || []).join(", "),
             colors: (product.colors || []).join(", "),
-            stock: product.stock ?? 0,
             isFeatured: Boolean(product.isFeatured),
             isPublished: Boolean(product.isPublished)
         });
 
+        setStockMap(stockMapFromProduct(product));
         setImages([]);
         setError("");
         setMessage("");
@@ -113,15 +117,9 @@ function AdminProducts() {
         if (!editingProduct) return;
 
         const price = Number(formData.price);
-        const stock = Number(formData.stock);
 
         if (!Number.isFinite(price) || price < 0) {
             setError("Enter a valid product price.");
-            return;
-        }
-
-        if (!Number.isInteger(stock) || stock < 0) {
-            setError("Stock must be a whole number greater than or equal to zero.");
             return;
         }
 
@@ -134,7 +132,12 @@ function AdminProducts() {
         data.append("subcategory", formData.subcategory.trim());
         data.append("sizes", formData.sizes);
         data.append("colors", formData.colors);
-        data.append("stock", String(stock));
+        data.append(
+            "variants",
+            JSON.stringify(
+                buildVariants(formData.sizes, formData.colors, stockMap)
+            )
+        );
         data.append("isFeatured", String(formData.isFeatured));
         data.append("isPublished", String(formData.isPublished));
 
@@ -314,20 +317,6 @@ function AdminProducts() {
                             </div>
 
                             <div className="admin-form-field">
-                                <label htmlFor="edit-stock">Stock</label>
-                                <input
-                                    id="edit-stock"
-                                    name="stock"
-                                    type="number"
-                                    min="0"
-                                    step="1"
-                                    value={formData.stock}
-                                    onChange={handleFormChange}
-                                    required
-                                />
-                            </div>
-
-                            <div className="admin-form-field">
                                 <label htmlFor="edit-sizes">Sizes</label>
                                 <TagInput
                                     id="edit-sizes"
@@ -352,6 +341,16 @@ function AdminProducts() {
                                     suggestions={["Black", "White", "Beige", "Navy", "Brown", "Olive"]}
                                 />
                             </div>
+                        </div>
+
+                        <div className="admin-form-field">
+                            <label>Stock by size and colour</label>
+                            <StockGrid
+                                sizes={formData.sizes}
+                                colors={formData.colors}
+                                value={stockMap}
+                                onChange={setStockMap}
+                            />
                         </div>
 
                         <div className="admin-form-field">

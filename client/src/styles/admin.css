@@ -893,3 +893,52 @@ html:has(.admin-shell) #root {
     font-size: 12px;
     letter-spacing: 0.06em;
 }
+
+/* ---------- Stock grid ---------- */
+
+.stock-grid-scroll {
+    overflow-x: auto;
+    border: 1px solid #ddd4c4;
+}
+
+.stock-grid table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fffdf9;
+}
+
+.stock-grid th,
+.stock-grid td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #ebe4d8;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.stock-grid thead th {
+    background: #1c1511;
+    color: #f1e8da;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.stock-grid tbody th {
+    background: #f7f3ec;
+    color: #2a2723;
+    text-align: left;
+}
+
+.admin-shell .stock-grid input {
+    width: 76px !important;
+    min-height: 36px !important;
+    padding: 0 8px !important;
+    text-align: center;
+}
+
+.stock-grid-total,
+.sg-grid-hint {
+    margin: 8px 0 0;
+    color: #6f6456;
+    font-size: 12px;
+}

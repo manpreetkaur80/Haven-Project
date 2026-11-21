@@ -14,6 +14,44 @@ const parseArray = (value) => {
         .filter(Boolean);
 };
 
+// Reads the stock grid sent by the admin form: [{ size, color, stock }, ...]
+const parseVariants = (value) => {
+    if (value === undefined || value === null || value === "") return null;
+
+    let list = value;
+
+    if (typeof value === "string") {
+        try {
+            list = JSON.parse(value);
+        } catch {
+            throw Object.assign(new Error("Stock grid is not valid."), { statusCode: 400 });
+        }
+    }
+
+    if (!Array.isArray(list) || list.length > 200) {
+        throw Object.assign(new Error("Stock grid is not valid."), { statusCode: 400 });
+    }
+
+    const seen = new Set();
+
+    return list.map((entry) => {
+        const size = String(entry?.size ?? "").trim();
+        const color = String(entry?.color ?? "").trim();
+        const stock = Number(entry?.stock);
+        const key = `${size.toLowerCase()}|${color.toLowerCase()}`;
+
+        if (!Number.isInteger(stock) || stock < 0) {
+            throw Object.assign(new Error("Stock must be a whole number, 0 or more."), { statusCode: 400 });
+        }
+        if (seen.has(key)) {
+            throw Object.assign(new Error("Duplicate size/colour in the stock grid."), { statusCode: 400 });
+        }
+        seen.add(key);
+
+        return { size, color, stock };
+    });
+};
+
 const deleteCloudinaryImages = async (images = []) => {
     await Promise.all(
         images
@@ -83,6 +121,8 @@ const createProduct = async (req, res) => {
             stock
         } = req.body;
 
+        const variants = parseVariants(req.body.variants);
+
         for (const file of req.files || []) {
             const image = await uploadToCloudinary(file.buffer);
             uploadedImages.push(image);
@@ -96,7 +136,8 @@ const createProduct = async (req, res) => {
             subcategory,
             sizes: parseArray(req.body.sizes),
             colors: parseArray(req.body.colors),
-            stock: Number(stock),
+            stock: variants ? 0 : Number(stock),
+            variants: variants || [],
             images: uploadedImages
         });
 
@@ -106,6 +147,10 @@ const createProduct = async (req, res) => {
         });
     } catch (error) {
         await deleteCloudinaryImages(uploadedImages);
+
+        if (error.statusCode) {
+            return res.status(error.statusCode).json({ message: error.message });
+        }
 
         if (
             error.name === "ValidationError" ||
@@ -165,9 +210,16 @@ const updateProduct = async (req, res) => {
         if (price !== undefined) product.price = Number(price);
         if (category !== undefined) product.category = category;
         if (subcategory !== undefined) product.subcategory = subcategory;
-        if (stock !== undefined) product.stock = Number(stock);
-        if (sizes !== undefined) product.sizes = parseArray(sizes);
-        if (colors !== undefined) product.colors = parseArray(colors);
+        const variants = parseVariants(req.body.variants);
+
+        if (variants) {
+            // Sizes, colours and total stock are derived from the grid.
+            product.variants = variants;
+        } else {
+            if (stock !== undefined) product.stock = Number(stock);
+            if (sizes !== undefined) product.sizes = parseArray(sizes);
+            if (colors !== undefined) product.colors = parseArray(colors);
+        }
 
         if (isFeatured !== undefined) {
             product.isFeatured = isFeatured === "true" || isFeatured === true;
@@ -193,6 +245,10 @@ const updateProduct = async (req, res) => {
         });
     } catch (error) {
         await deleteCloudinaryImages(uploadedImages);
+
+        if (error.statusCode) {
+            return res.status(error.statusCode).json({ message: error.message });
+        }
 
         if (error.name === "ValidationError" || error.name === "CastError") {
             return res.status(400).json({ message: error.message });

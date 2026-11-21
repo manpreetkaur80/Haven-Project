@@ -1,7 +1,10 @@
 
 const mongoose = require("mongoose");
 const Order = require("../models/Order");
-const Product = require("../models/Product");
+const { restoreStock } = require("../utils/inventory");
+const { refundIfPaidOnline } = require("./orderController");
+const { sendEmail } = require("../utils/email");
+const { orderStatusEmail } = require("../utils/emailTemplates");
 
 // GET ALL ORDERS (ADMIN)
 const getAllOrders = async (req, res) => {
@@ -75,6 +78,27 @@ const updateOrderStatus = async (req, res) => {
                 );
             }
 
+            // An online order can't move forward until the money has arrived.
+            if (
+                order.paymentMethod === "Razorpay" &&
+                order.paymentStatus === "Pending" &&
+                orderStatus !== "Cancelled"
+            ) {
+                throw Object.assign(
+                    new Error("This order is still waiting for online payment."),
+                    { statusCode: 409 }
+                );
+            }
+
+            // Cash on delivery is collected when the parcel is handed over.
+            if (
+                orderStatus === "Delivered" &&
+                order.paymentMethod === "COD" &&
+                order.paymentStatus === "Pending"
+            ) {
+                order.paymentStatus = "Paid";
+            }
+
             // Prevent a cancelled order from being reopened.
             if (
                 order.orderStatus === "Cancelled" &&
@@ -107,24 +131,7 @@ const updateOrderStatus = async (req, res) => {
                 !order.stockRestored
             ) {
                 for (const item of order.items) {
-                    const result = await Product.updateOne(
-                        { _id: item.product },
-                        {
-                            $inc: {
-                                stock: item.quantity,
-                            },
-                        },
-                        { session }
-                    );
-
-                    if (result.matchedCount !== 1) {
-                        throw Object.assign(
-                            new Error(
-                                `Product "${item.name}" no longer exists. Stock could not be restored.`
-                            ),
-                            { statusCode: 409 }
-                        );
-                    }
+                    await restoreStock(item, session);
                 }
 
                 order.stockRestored = true;
@@ -136,6 +143,15 @@ const updateOrderStatus = async (req, res) => {
 
             updatedOrder = order;
         });
+
+        if (updatedOrder.orderStatus === "Cancelled") {
+            await refundIfPaidOnline(updatedOrder);
+        }
+
+        const statusEmail = orderStatusEmail(updatedOrder);
+        if (statusEmail) {
+            sendEmail({ to: updatedOrder.customer?.email, ...statusEmail });
+        }
 
         return res.status(200).json({
             message: "Order status updated successfully.",

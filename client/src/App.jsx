@@ -21,6 +21,8 @@ import AddProduct from "./admin/AddProduct";
 import AdminProducts from "./admin/AdminProducts";
 import AdminDashboard from "./admin/AdminDashboard";
 import Orders from "./pages/Orders";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import { CartProvider } from "./context/CartContext";
 import { AuthProvider } from "./context/AuthContext";
 import { WishlistProvider } from "./context/WishlistContext";
@@ -38,6 +40,7 @@ const PAGE_TITLES = {
     "/checkout": "Checkout",
     "/login": "Log in",
     "/signup": "Create account",
+    "/forgot-password": "Forgot password",
     "/profile": "My account",
     "/orders": "My orders",
 };
@@ -58,6 +61,7 @@ function useDocumentTitle() {
             else if (pathname.startsWith("/products/")) title = "Product";
             else if (pathname.startsWith("/order-confirmation")) title = "Order placed";
             else if (pathname.startsWith("/orders/")) title = "Track order";
+            else if (pathname.startsWith("/reset-password")) title = "Reset password";
             else title = "Page not found";
         }
         document.title = pathname === "/" ? title : `${title} — HAVEN`;
@@ -244,6 +248,24 @@ function App() {
                                 element={
                                     <CustomerLayout>
                                         <Signup />
+                                    </CustomerLayout>
+                                }
+                            />
+
+                            <Route
+                                path="/forgot-password"
+                                element={
+                                    <CustomerLayout>
+                                        <ForgotPassword />
+                                    </CustomerLayout>
+                                }
+                            />
+
+                            <Route
+                                path="/reset-password/:token"
+                                element={
+                                    <CustomerLayout>
+                                        <ResetPassword />
                                     </CustomerLayout>
                                 }
                             />

@@ -1,5 +1,8 @@
 
 const mongoose = require("mongoose");
+const razorpay = require("../utils/razorpay");
+const { sendEmail } = require("../utils/email");
+const { orderStatusEmail } = require("../utils/emailTemplates");
 const Order = require("../models/Order");
 
 // CUSTOMER: REQUEST A RETURN
@@ -198,6 +201,31 @@ const markRefunded = async (req, res) => {
     }
 
     try {
+        // Online payments are refunded to the customer's card/UPI automatically.
+        const existing = await Order.findOne({
+            _id: orderId,
+            orderStatus: "Returned",
+            paymentStatus: "Paid",
+        });
+
+        if (
+            existing &&
+            existing.paymentMethod === "Razorpay" &&
+            existing.razorpayPaymentId
+        ) {
+            try {
+                await razorpay.refundPayment(
+                    existing.razorpayPaymentId,
+                    existing.totalAmount
+                );
+            } catch (refundError) {
+                console.error("Razorpay refund failed:", refundError.message);
+                return res.status(502).json({
+                    message: `The online refund failed: ${refundError.message}`,
+                });
+            }
+        }
+
         const order = await Order.findOneAndUpdate(
             {
                 _id: orderId,
@@ -207,6 +235,7 @@ const markRefunded = async (req, res) => {
             {
                 $set: {
                     orderStatus: "Refunded",
+                    paymentStatus: "Refunded",
                 },
             },
             {
@@ -221,6 +250,9 @@ const markRefunded = async (req, res) => {
                     "The order must be returned and payment must be marked Paid before recording a refund.",
             });
         }
+
+        const refundEmail = orderStatusEmail(order);
+        if (refundEmail) sendEmail({ to: order.customer?.email, ...refundEmail });
 
         return res.status(200).json({
             message: "Refund recorded successfully.",

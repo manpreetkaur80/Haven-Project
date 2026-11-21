@@ -1,6 +1,16 @@
 
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
+const bcrypt = require("bcryptjs");
+
+const DUMMY_HASH = bcrypt.hashSync("haven-dummy-password", 12);
 const User = require("../models/User");
+const { sendEmail } = require("../utils/email");
+const {
+    welcomeEmail,
+    resetPasswordEmail,
+    clientUrl
+} = require("../utils/emailTemplates");
 
 const createToken = (user) => {
     return jwt.sign(
@@ -77,6 +87,8 @@ const signup = async (req, res) => {
 
         const token = createToken(user);
 
+        sendEmail({ to: user.email, ...welcomeEmail(user) });
+
         return res.status(201).json({
             message: "Account created successfully.",
             token,
@@ -118,7 +130,15 @@ const login = async (req, res) => {
             email: email.trim().toLowerCase()
         }).select("+password");
 
-        if (!user || !(await user.comparePassword(password))) {
+        if (!user) {
+            // Spend the same time as a real check so response time doesn't reveal which emails exist.
+            await bcrypt.compare(password, DUMMY_HASH);
+            return res.status(401).json({
+                message: "Invalid email or password."
+            });
+        }
+
+        if (!(await user.comparePassword(password))) {
             return res.status(401).json({
                 message: "Invalid email or password."
             });
@@ -161,4 +181,80 @@ const getMe = async (req, res) => {
     }
 };
 
-module.exports = { signup, login, getMe };
+const hashToken = (token) =>
+    crypto.createHash("sha256").update(token).digest("hex");
+
+// Always answers the same way, so the form can't be used to find out which emails have accounts.
+const forgotPassword = async (req, res) => {
+    const generic = {
+        message:
+            "If an account exists for that email, a reset link is on its way."
+    };
+
+    try {
+        const { email } = req.body;
+
+        if (typeof email !== "string" || !email.trim()) {
+            return res.status(400).json({ message: "Please enter your email." });
+        }
+
+        const user = await User.findOne({ email: email.trim().toLowerCase() });
+
+        if (user) {
+            const rawToken = crypto.randomBytes(32).toString("hex");
+
+            user.resetPasswordToken = hashToken(rawToken);
+            user.resetPasswordExpires = new Date(Date.now() + 30 * 60 * 1000);
+            await user.save();
+
+            const resetUrl = `${clientUrl()}/reset-password/${rawToken}`;
+            await sendEmail({ to: user.email, ...resetPasswordEmail(user, resetUrl) });
+        }
+
+        return res.status(200).json(generic);
+    } catch (error) {
+        console.error("Forgot password error:", error.message);
+        return res.status(200).json(generic);
+    }
+};
+
+const resetPassword = async (req, res) => {
+    try {
+        const { token, password } = req.body;
+
+        if (typeof token !== "string" || typeof password !== "string") {
+            return res.status(400).json({ message: "Invalid reset request." });
+        }
+
+        if (password.length < 8 || password.length > 128) {
+            return res.status(400).json({
+                message: "Password must be between 8 and 128 characters."
+            });
+        }
+
+        const user = await User.findOne({
+            resetPasswordToken: hashToken(token),
+            resetPasswordExpires: { $gt: new Date() }
+        }).select("+resetPasswordToken +resetPasswordExpires");
+
+        if (!user) {
+            return res.status(400).json({
+                message: "This reset link is invalid or has expired."
+            });
+        }
+
+        user.password = password;
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpires = undefined;
+        await user.save();
+
+        return res.status(200).json({
+            message: "Password updated. You can log in now."
+        });
+    } catch (error) {
+        console.error("Reset password error:", error.message);
+        return res.status(500).json({ message: "Unable to reset your password." });
+    }
+};
+
+module.exports = { signup, login, getMe, forgotPassword, resetPassword };

@@ -57,7 +57,7 @@ function OrderConfirmation() {
                         <strong>
                             {order.paymentMethod === "COD"
                                 ? "Cash on Delivery"
-                                : order.paymentMethod}
+                                : `Paid online${order.paymentStatus === "Paid" ? "" : ` (${order.paymentStatus})`}`}
                         </strong>
                     </div>
                 </div>
@@ -105,7 +105,9 @@ function OrderConfirmation() {
                 <p className="confirmation-payment-note">
                     {order.paymentMethod === "COD"
                         ? "Payment is due when your order is delivered."
-                        : "Your payment status will be updated as your order progresses."}
+                        : order.paymentStatus === "Paid"
+                          ? "Payment received. A confirmation email is on its way."
+                          : "Your payment is being confirmed."}
                 </p>
 
                 <Link to="/products" className="confirmation-button">

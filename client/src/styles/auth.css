@@ -165,3 +165,7 @@ html:has(.auth-page) #root {
         align-items: flex-start;
     }
 }
+
+.auth-forgot {
+    margin-top: 14px;
+}

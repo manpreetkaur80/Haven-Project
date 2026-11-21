@@ -162,6 +162,20 @@ const products = [
     }
 ];
 
+// Spread a total over every size + colour so each combination has its own stock.
+function buildVariants(item) {
+    const combos = [];
+    for (const size of item.sizes) {
+        for (const color of item.colors) combos.push({ size, color, stock: 0 });
+    }
+    let left = item.stock;
+    for (let i = 0; left > 0; i = (i + 1) % combos.length) {
+        combos[i].stock += 1;
+        left -= 1;
+    }
+    return combos;
+}
+
 async function seedProducts() {
     try {
         await mongoose.connect(process.env.MONGO_URI);
@@ -169,7 +183,7 @@ async function seedProducts() {
         for (const item of products) {
             await Product.updateOne(
                 { name: item.name, category: item.category },
-                { $setOnInsert: item },
+                { $setOnInsert: { ...item, variants: buildVariants(item) } },
                 { upsert: true, runValidators: true }
             );
         }

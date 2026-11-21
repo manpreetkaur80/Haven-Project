@@ -2,11 +2,13 @@
 const mongoose = require("mongoose");
 const Product = require("../models/Product");
 const Order = require("../models/Order");
-const Coupon = require("../models/Coupon");
-const { evaluateCoupon } = require("../utils/coupons");
+const { reserveStock, restoreStock } = require("../utils/inventory");
+const razorpay = require("../utils/razorpay");
+const { sendEmail } = require("../utils/email");
+const { orderPlacedEmail, orderStatusEmail } = require("../utils/emailTemplates");
 
 const createOrder = async (req, res) => {
-  const { customer, shippingAddress, items, paymentMethod, couponCode } = req.body;
+  const { customer, shippingAddress, items, paymentMethod } = req.body;
 
   // Authentication middleware must set req.user.
   if (!req.user?.userId) {
@@ -44,12 +46,18 @@ const createOrder = async (req, res) => {
   }
 
   if (
-    paymentMethod !== "COD" ||
+    !["COD", "Razorpay"].includes(paymentMethod) ||
     !Array.isArray(items) ||
     items.length === 0
   ) {
     return res.status(400).json({
       message: "A valid payment method and at least one item are required.",
+    });
+  }
+
+  if (paymentMethod === "Razorpay" && !razorpay.isConfigured()) {
+    return res.status(503).json({
+      message: "Online payment is not available right now. Please choose Cash on Delivery.",
     });
   }
 
@@ -116,13 +124,6 @@ const createOrder = async (req, res) => {
           );
         }
 
-        if (requested.quantity > product.stock) {
-          throw Object.assign(
-            new Error(`${product.name} does not have enough stock.`),
-            { statusCode: 409 }
-          );
-        }
-
         if (
           product.sizes?.length &&
           !product.sizes.includes(requested.size)
@@ -143,27 +144,8 @@ const createOrder = async (req, res) => {
           );
         }
 
-        // Atomically reduce stock within the transaction.
-        const stockUpdate = await Product.updateOne(
-          {
-            _id: product._id,
-            isPublished: true,
-            stock: { $gte: requested.quantity },
-          },
-          {
-            $inc: { stock: -requested.quantity },
-          },
-          { session }
-        );
-
-        if (stockUpdate.modifiedCount !== 1) {
-          throw Object.assign(
-            new Error(
-              `Stock for ${product.name} has changed. Please review your bag.`
-            ),
-            { statusCode: 409 }
-          );
-        }
+        // Atomically take stock for this size + colour inside the transaction.
+        await reserveStock(product, requested, session);
 
         // Price and image come from the database, not the browser.
         const price = product.price;
@@ -181,42 +163,6 @@ const createOrder = async (req, res) => {
       }
 
       const shippingFee = 0;
-
-      // Discount code: re-checked here so the browser cannot fake a discount.
-      let discountAmount = 0;
-      let appliedCode = "";
-
-      if (couponCode && String(couponCode).trim()) {
-        const { coupon, discountAmount: amount } = await evaluateCoupon(
-          couponCode,
-          subtotal,
-          session
-        );
-
-        // Atomically use up one redemption (respects the usage limit).
-        const redeemed = await Coupon.updateOne(
-          {
-            _id: coupon._id,
-            isActive: true,
-            $or: [
-              { usageLimit: 0 },
-              { $expr: { $lt: ["$usedCount", "$usageLimit"] } },
-            ],
-          },
-          { $inc: { usedCount: 1 } },
-          { session }
-        );
-
-        if (redeemed.modifiedCount !== 1) {
-          throw Object.assign(
-            new Error("This discount code has been fully used."),
-            { statusCode: 400 }
-          );
-        }
-
-        discountAmount = amount;
-        appliedCode = coupon.code;
-      }
 
       const [order] = await Order.create(
         [
@@ -241,10 +187,8 @@ const createOrder = async (req, res) => {
             items: orderItems,
             subtotal,
             shippingFee,
-            couponCode: appliedCode,
-            discountAmount,
-            totalAmount: subtotal - discountAmount + shippingFee,
-            paymentMethod: "COD",
+            totalAmount: subtotal + shippingFee,
+            paymentMethod,
             paymentStatus: "Pending",
             orderStatus: "Placed",
           },
@@ -255,8 +199,39 @@ const createOrder = async (req, res) => {
       savedOrder = order;
     });
 
+    // Online payment: ask Razorpay for a payment order the browser can open.
+    let payment = null;
+
+    if (paymentMethod === "Razorpay") {
+      try {
+        const rzpOrder = await razorpay.createRazorpayOrder({
+          amount: savedOrder.totalAmount,
+          receipt: savedOrder._id.toString(),
+        });
+
+        savedOrder.razorpayOrderId = rzpOrder.id;
+        await savedOrder.save();
+
+        payment = {
+          keyId: process.env.RAZORPAY_KEY_ID,
+          razorpayOrderId: rzpOrder.id,
+          amount: rzpOrder.amount,
+          currency: rzpOrder.currency,
+        };
+      } catch (paymentError) {
+        console.error("Razorpay order creation failed:", paymentError.message);
+        await releaseUnpaidOrder(savedOrder._id, "Failed");
+        return res.status(502).json({
+          message: "We couldn't start the payment. Please try again or choose Cash on Delivery.",
+        });
+      }
+    } else {
+      sendEmail({ to: savedOrder.customer.email, ...orderPlacedEmail(savedOrder) });
+    }
+
     return res.status(201).json({
       message: "Order placed successfully.",
+      payment,
       order: {
         _id: savedOrder._id,
         customer: savedOrder.customer,
@@ -264,8 +239,6 @@ const createOrder = async (req, res) => {
         items: savedOrder.items,
         subtotal: savedOrder.subtotal,
         shippingFee: savedOrder.shippingFee,
-        couponCode: savedOrder.couponCode,
-        discountAmount: savedOrder.discountAmount,
         totalAmount: savedOrder.totalAmount,
         paymentMethod: savedOrder.paymentMethod,
         paymentStatus: savedOrder.paymentStatus,
@@ -345,24 +318,7 @@ const cancelMyOrder = async (req, res) => {
             // Restore stock only if it has not already been restored.
             if (!order.stockRestored) {
                 for (const item of order.items) {
-                    const result = await Product.updateOne(
-                        { _id: item.product },
-                        {
-                            $inc: {
-                                stock: item.quantity,
-                            },
-                        },
-                        { session }
-                    );
-
-                    if (result.matchedCount !== 1) {
-                        throw Object.assign(
-                            new Error(
-                                `Product "${item.name}" could not be found. Stock restoration failed.`
-                            ),
-                            { statusCode: 409 }
-                        );
-                    }
+                    await restoreStock(item, session);
                 }
 
                 order.stockRestored = true;
@@ -373,6 +329,12 @@ const cancelMyOrder = async (req, res) => {
             await order.save({ session });
 
             cancelledOrder = order;
+        });
+
+        await refundIfPaidOnline(cancelledOrder);
+        sendEmail({
+            to: cancelledOrder.customer.email,
+            ...orderStatusEmail(cancelledOrder),
         });
 
         return res.status(200).json({
@@ -399,7 +361,68 @@ const cancelMyOrder = async (req, res) => {
 };
 
 
+/**
+ * Cancels an online order whose payment never completed and puts its stock back.
+ * Safe to call more than once. Returns true if it released the order.
+ */
+async function releaseUnpaidOrder(orderId, paymentStatus = "Failed") {
+    const session = await mongoose.startSession();
+    let released = false;
+
+    try {
+        await session.withTransaction(async () => {
+            released = false;
+            const order = await Order.findOne({
+                _id: orderId,
+                paymentMethod: "Razorpay",
+                paymentStatus: "Pending",
+                orderStatus: "Placed",
+            }).session(session);
+
+            if (!order) return;
+
+            if (!order.stockRestored) {
+                for (const item of order.items) {
+                    await restoreStock(item, session);
+                }
+                order.stockRestored = true;
+            }
+
+            order.orderStatus = "Cancelled";
+            order.paymentStatus = paymentStatus;
+            await order.save({ session });
+            released = true;
+        });
+    } finally {
+        await session.endSession();
+    }
+
+    return released;
+}
+
+/** If a customer paid online and the order is cancelled, send the money back. */
+async function refundIfPaidOnline(order) {
+    if (
+        order.paymentMethod !== "Razorpay" ||
+        order.paymentStatus !== "Paid" ||
+        !order.razorpayPaymentId
+    ) {
+        return;
+    }
+
+    try {
+        await razorpay.refundPayment(order.razorpayPaymentId, order.totalAmount);
+        order.paymentStatus = "Refunded";
+        await order.save();
+    } catch (error) {
+        // Leave it as Paid so the admin can see it still needs a manual refund.
+        console.error(`Refund failed for order ${order._id}:`, error.message);
+    }
+}
+
 module.exports = {
     createOrder,
     cancelMyOrder,
+    releaseUnpaidOrder,
+    refundIfPaidOnline,
 };

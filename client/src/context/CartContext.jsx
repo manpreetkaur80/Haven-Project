@@ -25,6 +25,14 @@ export function CartProvider({ children }) {
     }, [cartItems]);
 
     const addToCart = (product, size, color, quantity = 1) => {
+        // Stock for this exact size + colour (older products only have one total).
+        const variant = product.variants?.find(
+            (v) => v.size === (size || "") && v.color === (color || "")
+        );
+        const available = product.variants?.length
+            ? variant?.stock ?? 0
+            : product.stock;
+
         setCartItems((previousItems) => {
             const existingItem = previousItems.find(
                 (item) =>
@@ -40,7 +48,7 @@ export function CartProvider({ children }) {
                             ...item,
                             quantity: Math.min(
                                 item.quantity + quantity,
-                                product.stock
+                                available
                             )
                         }
                         : item
@@ -57,8 +65,8 @@ export function CartProvider({ children }) {
                     image: product.images?.[0]?.url || "",
                     size,
                     color,
-                    quantity: Math.min(quantity, product.stock),
-                    stock: product.stock
+                    quantity: Math.min(quantity, available),
+                    stock: available
                 }
             ];
         });

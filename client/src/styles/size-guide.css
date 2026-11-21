@@ -190,3 +190,11 @@
     text-transform: none;
     font-size: 13px;
 }
+
+/* sold-out size / colour options */
+.detail-size-button:disabled,
+.detail-color-button:disabled {
+    opacity: 0.38;
+    text-decoration: line-through;
+    cursor: not-allowed;
+}

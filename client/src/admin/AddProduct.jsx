@@ -2,8 +2,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { API_URL } from "../services/api";
 import ImageDropzone from "../components/ImageDropzone";
 import TagInput from "../components/TagInput";
+import StockGrid, { buildVariants } from "../components/StockGrid";
 import "../styles/admin.css";
 
 const SIZE_SUGGESTIONS = ["XS", "S", "M", "L", "XL", "XXL"];
@@ -16,8 +18,7 @@ const initialFormData = {
     category: "Women",
     subcategory: "",
     sizes: "",
-    colors: "",
-    stock: ""
+    colors: ""
 };
 
 function AddProduct() {
@@ -26,6 +27,7 @@ function AddProduct() {
 
     const [formData, setFormData] = useState(initialFormData);
     const [images, setImages] = useState([]);
+    const [stockMap, setStockMap] = useState({});
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
@@ -59,15 +61,9 @@ function AddProduct() {
         }
 
         const price = Number(formData.price);
-        const stock = Number(formData.stock);
 
-        if (
-            !Number.isFinite(price) ||
-            price < 0 ||
-            !Number.isInteger(stock) ||
-            stock < 0
-        ) {
-            setError("Enter a valid price and a whole-number stock quantity.");
+        if (!Number.isFinite(price) || price < 0) {
+            setError("Enter a valid price.");
             setLoading(false);
             return;
         }
@@ -87,7 +83,12 @@ function AddProduct() {
         productData.append("subcategory", formData.subcategory.trim());
         productData.append("sizes", formData.sizes);
         productData.append("colors", formData.colors);
-        productData.append("stock", formData.stock);
+        productData.append(
+            "variants",
+            JSON.stringify(
+                buildVariants(formData.sizes, formData.colors, stockMap)
+            )
+        );
 
         images.forEach((image) => {
             productData.append("images", image);
@@ -95,7 +96,7 @@ function AddProduct() {
 
         try {
             const response = await fetch(
-                "http://localhost:5000/api/products",
+                `${API_URL}/products`,
                 {
                     method: "POST",
                     headers: {
@@ -131,6 +132,7 @@ function AddProduct() {
 
             setFormData({ ...initialFormData });
             setImages([]);
+            setStockMap({});
 
         } catch (err) {
             setError(
@@ -261,16 +263,12 @@ function AddProduct() {
                     suggestions={COLOR_SUGGESTIONS}
                 />
 
-                <label htmlFor="stock">Stock Quantity</label>
-                <input
-                    id="stock"
-                    name="stock"
-                    type="number"
-                    min="0"
-                    step="1"
-                    value={formData.stock}
-                    onChange={handleChange}
-                    required
+                <label>Stock by size and colour</label>
+                <StockGrid
+                    sizes={formData.sizes}
+                    colors={formData.colors}
+                    value={stockMap}
+                    onChange={setStockMap}
                 />
 
                 <ImageDropzone
