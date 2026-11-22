@@ -434,16 +434,16 @@ function AdminDashboard() {
                             <tbody>
                                 {recentOrders.map((order) => (
                                     <tr key={order._id}>
-                                        <td>#{order._id.slice(-7).toUpperCase()}</td>
-                                        <td>
+                                        <td className="mt-title">#{order._id.slice(-7).toUpperCase()}</td>
+                                        <td data-label="Customer">
                                             {order.customer?.fullName ||
                                                 order.customerId?.fullName ||
                                                 "Customer"}
                                         </td>
-                                        <td>{formatDate(order.createdAt)}</td>
-                                        <td>{formatCurrency(order.totalAmount)}</td>
-                                        <td>{order.paymentMethod || "—"}</td>
-                                        <td>
+                                        <td data-label="Date">{formatDate(order.createdAt)}</td>
+                                        <td data-label="Amount">{formatCurrency(order.totalAmount)}</td>
+                                        <td data-label="Payment">{order.paymentMethod || "—"}</td>
+                                        <td data-label="Status">
                                             <span
                                                 className={`admin-badge status-${(order.orderStatus || "unknown")
                                                     .toLowerCase()

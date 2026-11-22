@@ -280,13 +280,13 @@ const handleMarkRefunded = async () => {
                         <tbody>
                             {visibleOrders.map((order) => (
                                 <tr key={order._id}>
-                                    <td>#{order._id.slice(-8).toUpperCase()}</td>
-                                    <td>{order.customer?.fullName || "Customer"}</td>
-                                    <td>{formatDate(order.createdAt)}</td>
-                                    <td>{order.paymentMethod}</td>
-                                    <td>{formatCurrency(order.totalAmount)}</td>
-                                    <td><span className={`admin-badge status-${(order.orderStatus || "").toLowerCase().replace(/\s+/g, "-")}`}>{order.orderStatus}</span></td>
-                                    <td>
+                                    <td className="mt-title">#{order._id.slice(-8).toUpperCase()}</td>
+                                    <td data-label="Customer">{order.customer?.fullName || "Customer"}</td>
+                                    <td data-label="Date">{formatDate(order.createdAt)}</td>
+                                    <td data-label="Payment">{order.paymentMethod === "Razorpay" ? `Online (${order.paymentStatus})` : "Cash on delivery"}</td>
+                                    <td data-label="Total">{formatCurrency(order.totalAmount)}</td>
+                                    <td data-label="Status"><span className={`admin-badge status-${(order.orderStatus || "").toLowerCase().replace(/\s+/g, "-")}`}>{order.orderStatus}</span></td>
+                                    <td className="mt-action">
                                         <button
                                             type="button"
                                             className="admin-btn admin-btn-ghost admin-btn-sm"

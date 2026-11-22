@@ -470,7 +470,7 @@ function AdminProducts() {
                             <tbody>
                                 {filteredProducts.map((product) => (
                                     <tr key={product._id}>
-                                        <td>
+                                        <td className="apt-product">
                                             <div className="admin-product-info">
                                                 {product.images?.[0]?.url ? (
                                                     <img
@@ -490,15 +490,15 @@ function AdminProducts() {
                                             </div>
                                         </td>
 
-                                        <td>{product.category}</td>
+                                        <td data-label="Category">{product.category}</td>
 
-                                        <td>
+                                        <td data-label="Price">
                                             ₹{Number(product.price).toLocaleString("en-IN")}
                                         </td>
 
-                                        <td>{product.stock}</td>
+                                        <td data-label="Stock">{product.stock}</td>
 
-                                        <td>
+                                        <td data-label="Status">
                                             <span className={
                                                 product.isPublished
                                                     ? "admin-status published"
@@ -516,7 +516,7 @@ function AdminProducts() {
                                             )}
                                         </td>
 
-                                        <td>
+                                        <td className="apt-actions">
                                             <div className="admin-product-actions">
                                                 <button
                                                     type="button"

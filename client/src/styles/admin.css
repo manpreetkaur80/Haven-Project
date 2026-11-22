@@ -942,3 +942,73 @@ html:has(.admin-shell) #root {
     color: #6f6456;
     font-size: 12px;
 }
+
+/* ---------- Phones: admin tables become stacked cards ---------- */
+@media (max-width: 760px) {
+    .admin-table-wrap {
+        overflow-x: visible;
+        border: 0;
+        background: transparent;
+    }
+
+    .admin-table,
+    .admin-table tbody {
+        display: block;
+        min-width: 0;
+        width: 100%;
+    }
+
+    .admin-table thead {
+        display: none;
+    }
+
+    .admin-table tbody {
+        display: grid;
+        gap: 14px;
+    }
+
+    .admin-table tr {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        box-sizing: border-box;
+        width: 100%;
+        gap: 0 16px;
+        padding: 16px;
+        border: 1px solid #ddd4c4;
+        background: #fffdf9;
+    }
+
+    .admin-table td {
+        padding: 9px 0;
+        border-bottom: 1px solid #ebe4d8;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    .admin-table td[data-label]::before {
+        content: attr(data-label);
+        display: block;
+        margin-bottom: 3px;
+        color: #8a7d6c;
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+    }
+
+    .admin-table td.mt-title {
+        grid-column: 1 / -1;
+        padding-top: 0;
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: 22px;
+    }
+
+    .admin-table td.mt-action {
+        grid-column: 1 / -1;
+        padding-bottom: 0;
+        border-bottom: 0;
+    }
+
+    .admin-table td.mt-action .admin-btn {
+        width: 100%;
+    }
+}
