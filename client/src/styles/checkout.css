@@ -303,8 +303,11 @@ html:has(.checkout-page) #root {
         gap: 35px;
     }
 
+    /* On phones the summary sits above the form: it must scroll away,
+       otherwise it stays stuck on screen and covers the address fields. */
     .checkout-summary {
         order: -1;
+        position: static;
     }
 }
 
@@ -415,3 +418,12 @@ html:has(.checkout-page) #root {
     margin-top: 0;
 }
 
+
+/* Must come last so it beats the desktop sticky rule above:
+   on phones the order summary scrolls away instead of covering the form. */
+@media (max-width: 850px) {
+    .checkout-summary {
+        position: static;
+        top: auto;
+    }
+}
