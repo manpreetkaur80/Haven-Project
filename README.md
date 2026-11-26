@@ -233,7 +233,7 @@ cd client && npm run lint
 
 
 ## 📸 Screenshots
-Add your own screenshots to a docs/ folder, then delete this comment markers:
+
 
 <p align="center">
   <img src="docs/home.png" width="49%" /> <img src="docs/collection.png" width="49%" />
