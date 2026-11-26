@@ -231,7 +231,7 @@ cd server && npm test        # security, payment-signature, stock and email chec
 cd client && npm run lint
 ```
 
-<!--
+
 ## 📸 Screenshots
 Add your own screenshots to a docs/ folder, then delete this comment markers:
 
@@ -239,7 +239,7 @@ Add your own screenshots to a docs/ folder, then delete this comment markers:
   <img src="docs/home.png" width="49%" /> <img src="docs/collection.png" width="49%" />
   <img src="docs/product.png" width="49%" /> <img src="docs/admin.png" width="49%" />
 </p>
--->
+
 
 ## 🗺️ Roadmap
 
@@ -256,6 +256,6 @@ Add your own screenshots to a docs/ folder, then delete this comment markers:
 
 <img src="https://capsule-render.vercel.app/api?type=waving&height=110&color=0:b99a76,60:3a2a20,100:1c1511&section=footer" width="100%" alt="" />
 
-<sub>Designed and built by <b>YOUR NAME</b> · <a href="https://github.com/YOUR-USERNAME">GitHub</a><br/>All product photos and videos are placeholders and belong to their respective owners.</sub>
+<sub>Designed and built by <b>Manpreet kaur </b> · <a href="https://github.com/manpreetkaur80/">GitHub</a><br/>All product photos and videos are placeholders and belong to their respective owners.</sub>
 
 </div>
