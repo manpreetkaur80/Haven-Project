@@ -47,8 +47,6 @@
 // }
 
 // module.exports = { sendEmail };
-
-
 const nodemailer = require("nodemailer");
 
 let transporter = null;
@@ -114,6 +112,7 @@ async function sendEmail({ to, subject, html, text }) {
     if (process.env.BREVO_API_KEY) {
         try {
             await sendWithBrevoApi({ from, to, subject, html, text });
+            console.log(`[email] sent via Brevo to ${to}: ${subject}`);
             return true;
         } catch (error) {
             console.error("Email send failed:", error.message);
@@ -132,6 +131,7 @@ async function sendEmail({ to, subject, html, text }) {
 
     try {
         await mailer.sendMail({ from, to, subject, html, text });
+        console.log(`[email] sent via SMTP to ${to}: ${subject}`);
         return true;
     } catch (error) {
         console.error("Email send failed:", error.message);
@@ -139,4 +139,13 @@ async function sendEmail({ to, subject, html, text }) {
     }
 }
 
-module.exports = { sendEmail, parseSender };
+// Printed once at startup so the hosting logs show which mode is active.
+function describeEmailMode() {
+    if (process.env.BREVO_API_KEY) {
+        return `Email mode: Brevo API, sender ${process.env.EMAIL_FROM || "(EMAIL_FROM is NOT set)"}`;
+    }
+    if (process.env.SMTP_HOST) return `Email mode: SMTP via ${process.env.SMTP_HOST}`;
+    return "Email mode: OFF (no BREVO_API_KEY or SMTP_HOST set, emails are only printed in the logs)";
+}
+
+module.exports = { sendEmail, parseSender, describeEmailMode };
