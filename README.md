@@ -204,7 +204,8 @@ The admin panel lives at **`/admin/login`**.
 | `CLOUDINARY_CLOUD_NAME` · `CLOUDINARY_API_KEY` · `CLOUDINARY_API_SECRET` | Product image uploads |
 | `RAZORPAY_KEY_ID` · `RAZORPAY_KEY_SECRET` | Online payments (`rzp_test_` keys while developing) |
 | `RAZORPAY_WEBHOOK_SECRET` | Optional: confirms payments if a customer closes the tab |
-| `SMTP_HOST` · `SMTP_PORT` · `SMTP_USER` · `SMTP_PASS` · `EMAIL_FROM` | Emails. If `SMTP_HOST` is empty, emails print in the terminal |
+| `BREVO_API_KEY` · `EMAIL_FROM` | Emails through [Brevo](https://www.brevo.com)'s web API (works on free hosting that blocks SMTP). `EMAIL_FROM` looks like `HAVEN <you@example.com>` and must be a verified sender |
+| `SMTP_HOST` · `SMTP_PORT` · `SMTP_USER` · `SMTP_PASS` | Optional alternative to Brevo: classic SMTP. With neither set, emails print in the terminal |
 | `TRUST_PROXY` | `1` when running behind a hosting proxy |
 
 </details>
@@ -243,7 +244,7 @@ cd client && npm run lint
 
 ## 🗺️ Roadmap
 
-- [x] Online payments, refunds and transactional emails
+- [x] Online payments, refunds and transactional emails (Brevo)
 - [x] Stock per size and colour
 - [x] Order tracking and returns
 - [ ] Shipping rates and GST invoices
@@ -256,6 +257,6 @@ cd client && npm run lint
 
 <img src="https://capsule-render.vercel.app/api?type=waving&height=110&color=0:b99a76,60:3a2a20,100:1c1511&section=footer" width="100%" alt="" />
 
-<sub>Designed and built by <b>Manpreet kaur </b> · <a href="https://github.com/manpreetkaur80/">GitHub</a><br/>All product photos and videos are placeholders and belong to their respective owners.</sub>
+<sub>Designed and built by <b>Manpreet kaur</b> · <a href="https://github.com/manpreetkaur80">GitHub</a><br/>All product photos and videos are placeholders and belong to their respective owners.</sub>
 
 </div>
